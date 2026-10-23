@@ -1,0 +1,509 @@
+{
+  "created_at_utc": "2026-10-23T12:08:16.663069+00:00",
+  "implementation_commit": "8d19a2def160c81b49c2bf1e84cad9694f5dd4aa",
+  "upstream_commit": "a1508d4",
+  "hardware": "NVIDIA GeForce RTX 5090, 32 GB",
+  "dataset": {
+    "schema": "supermimic-hoi-v1",
+    "fps": 50,
+    "quaternion_order": "wxyz",
+    "joint_names": [
+      "left_hip_pitch_joint",
+      "left_hip_roll_joint",
+      "left_hip_yaw_joint",
+      "left_knee_joint",
+      "left_ankle_pitch_joint",
+      "left_ankle_roll_joint",
+      "right_hip_pitch_joint",
+      "right_hip_roll_joint",
+      "right_hip_yaw_joint",
+      "right_knee_joint",
+      "right_ankle_pitch_joint",
+      "right_ankle_roll_joint",
+      "waist_yaw_joint",
+      "waist_roll_joint",
+      "waist_pitch_joint",
+      "left_shoulder_pitch_joint",
+      "left_shoulder_roll_joint",
+      "left_shoulder_yaw_joint",
+      "left_elbow_joint",
+      "left_wrist_roll_joint",
+      "left_wrist_pitch_joint",
+      "left_wrist_yaw_joint",
+      "right_shoulder_pitch_joint",
+      "right_shoulder_roll_joint",
+      "right_shoulder_yaw_joint",
+      "right_elbow_joint",
+      "right_wrist_roll_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint"
+    ],
+    "contact_order": [
+      "left_foot",
+      "right_foot",
+      "left_hand",
+      "right_hand"
+    ],
+    "source": "https://github.com/Ingrid789/OmniContact_sim2sim",
+    "source_commit": "1cf9ddd4067cbe5710b1f475e96f9c69f88055e2",
+    "source_license": "CC-BY-NC-SA-4.0",
+    "split_rule": "hold out the last 20% (at least one) complete source motions per family; no window leakage",
+    "clips": [
+      {
+        "name": "pushbox_motion_1_with_contact",
+        "family": "pushbox",
+        "split": "train",
+        "frames": 801,
+        "duration_s": 16.0,
+        "source_file": "data/pushbox/pushbox_motion_1_with_contact.npz",
+        "source_sha256": "339750019f44aae69639e90d4f77150bd269c3d6f600c24ab08b92e95142d7d6",
+        "hand_contact_fraction": 0.4007490575313568,
+        "object_displacement_m": 1.9387027025222778
+      },
+      {
+        "name": "pushbox_motion_2_with_contact",
+        "family": "pushbox",
+        "split": "val",
+        "frames": 1012,
+        "duration_s": 20.22,
+        "source_file": "data/pushbox/pushbox_motion_2_with_contact.npz",
+        "source_sha256": "9c540dc41f302acb3f2e809b80459582d34a6e04291eea1b47d8599798964d86",
+        "hand_contact_fraction": 0.4051383435726166,
+        "object_displacement_m": 2.6368658542633057
+      },
+      {
+        "name": "carrybox_motion_0_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 275,
+        "duration_s": 5.48,
+        "source_file": "data/carrybox/carrybox_motion_0_with_contact.npz",
+        "source_sha256": "cfefa55a0092a43026340a90a6d42fabd35cc6ed066ed09bc451f53549c4f933",
+        "hand_contact_fraction": 0.8181818127632141,
+        "object_displacement_m": 0.6114040613174438
+      },
+      {
+        "name": "carrybox_motion_10_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 1500,
+        "duration_s": 29.98,
+        "source_file": "data/carrybox/carrybox_motion_10_with_contact.npz",
+        "source_sha256": "916e6a3ec5f8ac9c7d26c6819eda4f17a5d32dc9a14c8aaeab8f047b76371cdd",
+        "hand_contact_fraction": 0.8640000224113464,
+        "object_displacement_m": 1.841457724571228
+      },
+      {
+        "name": "carrybox_motion_11_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 400,
+        "duration_s": 7.98,
+        "source_file": "data/carrybox/carrybox_motion_11_with_contact.npz",
+        "source_sha256": "bc0084c463064331bc8d209faaf9ce556e002bf508cb25427edbbc4ed6543487",
+        "hand_contact_fraction": 0.550000011920929,
+        "object_displacement_m": 3.7093162536621094
+      },
+      {
+        "name": "carrybox_motion_12_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 3257,
+        "duration_s": 65.12,
+        "source_file": "data/carrybox/carrybox_motion_12_with_contact.npz",
+        "source_sha256": "6eedff419b2fa0423adab369dc81e1bfc4af9ce68f75081f99727a34843456b6",
+        "hand_contact_fraction": 0.6720908880233765,
+        "object_displacement_m": 0.02655273862183094
+      },
+      {
+        "name": "carrybox_motion_1_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 900,
+        "duration_s": 17.98,
+        "source_file": "data/carrybox/carrybox_motion_1_with_contact.npz",
+        "source_sha256": "4cd51953bb44dcf52e3a1b9915c790c17c360ba7a3d0a2cd014ec871a7a65ff9",
+        "hand_contact_fraction": 0.8922222256660461,
+        "object_displacement_m": 3.3950369358062744
+      },
+      {
+        "name": "carrybox_motion_2_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 381,
+        "duration_s": 7.6,
+        "source_file": "data/carrybox/carrybox_motion_2_with_contact.npz",
+        "source_sha256": "6eac8f862726a4c29cf4adc5559ae2a1a38221092f92149fb2e234564f8a01da",
+        "hand_contact_fraction": 0.28871390223503113,
+        "object_displacement_m": 1.2283804416656494
+      },
+      {
+        "name": "carrybox_motion_3_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 335,
+        "duration_s": 6.68,
+        "source_file": "data/carrybox/carrybox_motion_3_with_contact.npz",
+        "source_sha256": "3503667d4b20422857702852edf711ce0a0039b1e91d4e79d103145d0b1c2a6b",
+        "hand_contact_fraction": 0.2597014904022217,
+        "object_displacement_m": 1.015683889389038
+      },
+      {
+        "name": "carrybox_motion_4_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 496,
+        "duration_s": 9.9,
+        "source_file": "data/carrybox/carrybox_motion_4_with_contact.npz",
+        "source_sha256": "ba5748d3548f42eb96a1d986472671e8c5b47fbb8f90ac7b87fa5569eecfc882",
+        "hand_contact_fraction": 0.6673387289047241,
+        "object_displacement_m": 1.3461194038391113
+      },
+      {
+        "name": "carrybox_motion_5_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 535,
+        "duration_s": 10.68,
+        "source_file": "data/carrybox/carrybox_motion_5_with_contact.npz",
+        "source_sha256": "02e1f267355a8bcb86f0201a9eed86a6e81175c89fb113ff82e1f9074776976b",
+        "hand_contact_fraction": 0.5943925380706787,
+        "object_displacement_m": 2.0676090717315674
+      },
+      {
+        "name": "carrybox_motion_6_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 618,
+        "duration_s": 12.34,
+        "source_file": "data/carrybox/carrybox_motion_6_with_contact.npz",
+        "source_sha256": "c8b2b1f7cce385f3738dd0defa6c29ac2288f48a1665d412ed502f42fd66a9cd",
+        "hand_contact_fraction": 0.6844660043716431,
+        "object_displacement_m": 2.1560373306274414
+      },
+      {
+        "name": "carrybox_motion_7_with_contact",
+        "family": "carrybox",
+        "split": "val",
+        "frames": 417,
+        "duration_s": 8.32,
+        "source_file": "data/carrybox/carrybox_motion_7_with_contact.npz",
+        "source_sha256": "983d2a538fc9842f9660dcbb9f1220975c5b946c4925de594b8639173523ca45",
+        "hand_contact_fraction": 0.7817745804786682,
+        "object_displacement_m": 1.3492823839187622
+      },
+      {
+        "name": "carrybox_motion_8_with_contact",
+        "family": "carrybox",
+        "split": "val",
+        "frames": 318,
+        "duration_s": 6.34,
+        "source_file": "data/carrybox/carrybox_motion_8_with_contact.npz",
+        "source_sha256": "b30acdb4f3d553144f41596dca64b8257e714b3a8906a19761de98dee95ab526",
+        "hand_contact_fraction": 0.8364779949188232,
+        "object_displacement_m": 2.129734992980957
+      },
+      {
+        "name": "carrybox_motion_9_with_contact",
+        "family": "carrybox",
+        "split": "val",
+        "frames": 379,
+        "duration_s": 7.56,
+        "source_file": "data/carrybox/carrybox_motion_9_with_contact.npz",
+        "source_sha256": "059c8153c4170c6ea643ec082be571817387a7db966cef16b091ec373842b881",
+        "hand_contact_fraction": 0.8416886329650879,
+        "object_displacement_m": 2.7343497276306152
+      }
+    ],
+    "reviewed_projects": {
+      "ULTRA": {
+        "commit": "351e0e8364b5706018a478c01fd9e0a0b027d669",
+        "included_in_training": false,
+        "g1_augmented_clips": 4066,
+        "reason": "Different 630D layout, object assets/scales and contact conventions need a separate adapter."
+      },
+      "I-BFM": {
+        "commit": "b4547263e925aedc16ade5427d03e9884f9fa3c2",
+        "included_in_training": false,
+        "reason": "Reviewed object context, capsule geometry and task metrics; no policy or replay buffer imported."
+      }
+    },
+    "robot_asset": "data/g1_description/g1_29dof_hoi.xml"
+  },
+  "experiment": {
+    "task": "pushbox",
+    "training_source_motions": 1,
+    "held_out_source_motions": 1,
+    "iterations": 2000,
+    "world_model_only_iterations": 500,
+    "policy_updates": 1500,
+    "recorded_training_seconds": 802.5984,
+    "timing_scope": "Training loop including compilation; excludes environment initialization and initial replay warm-up",
+    "sim_transitions": 2592768,
+    "args": {
+      "task": "hoi",
+      "init_policy": "logs/lafan1_5090/ckpt_014000.pt",
+      "no_compile": false,
+      "num_envs": 512,
+      "iterations": 2000,
+      "buffer_steps": 1000,
+      "utd": 0.4,
+      "horizon": 32,
+      "goal_frames": 10,
+      "hist": 10,
+      "wm_window": 8,
+      "wm_batches": 5,
+      "wm_batch": 512,
+      "pi_batch": 512,
+      "lr": 0.0002,
+      "gamma": 0.99,
+      "lam": 0.95,
+      "action_noise": 0.1,
+      "critic_epochs": 2,
+      "critic_minibatches": 4,
+      "no_critic": false,
+      "warmup_steps": 64,
+      "wm_only_iters": 500,
+      "lr_decay_iters": 250000,
+      "ckpt_every": 500,
+      "log_every": 50,
+      "motion_dir": "data/hoi/omnicontact/pushbox/train",
+      "log_dir": "logs/hoi_push_5090",
+      "seed": 0,
+      "resume": null,
+      "amp": "bf16",
+      "livestream": -1,
+      "xr": false,
+      "device": "cuda:0",
+      "visualizer": null,
+      "verbose": false,
+      "info": false,
+      "experience": "",
+      "deterministic": false,
+      "kit_args": "",
+      "anim_recording_enabled": false,
+      "anim_recording_start_time": 0,
+      "anim_recording_stop_time": 10
+    },
+    "box": {
+      "half_size": [
+        0.23,
+        0.25,
+        0.26
+      ],
+      "mass": 8.0,
+      "friction": 0.1,
+      "tables": false,
+      "table_half_size": [
+        0.2,
+        0.2,
+        0.01
+      ],
+      "robot_palm_capsule_radius": 0.035,
+      "physics_note": "Box inertia recomputed from size/mass; baseline G1 plus collision palms. Not an exact OmniContact simulator reproduction."
+    }
+  },
+  "results": {
+    "train": {
+      "norm_return": 0.9538183212280273,
+      "norm_return_framew": 0.9538183212280273,
+      "n_failed": 0,
+      "failed": [],
+      "per_clip": {
+        "pushbox_motion_1_with_contact": 0.9538
+      },
+      "object_position_rmse_m_alive": 0.05275177210569382,
+      "per_clip_object_rmse_m_alive": {
+        "pushbox_motion_1_with_contact": 0.0528
+      },
+      "per_clip_completion": {
+        "pushbox_motion_1_with_contact": 1.0
+      },
+      "per_clip_object_endpoint_error_m": {
+        "pushbox_motion_1_with_contact": 0.0962
+      },
+      "per_clip_object_displacement_m": {
+        "pushbox_motion_1_with_contact": 1.9817
+      },
+      "n_task_success": 1,
+      "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+      "failure_details": {}
+    },
+    "held_out": {
+      "norm_return": 0.050262369215488434,
+      "norm_return_framew": 0.050262369215488434,
+      "n_failed": 1,
+      "failed": [
+        "pushbox_motion_2_with_contact"
+      ],
+      "per_clip": {
+        "pushbox_motion_2_with_contact": 0.0503
+      },
+      "object_position_rmse_m_alive": 0.3081209063529968,
+      "per_clip_object_rmse_m_alive": {
+        "pushbox_motion_2_with_contact": 0.3081
+      },
+      "per_clip_completion": {
+        "pushbox_motion_2_with_contact": 0.087
+      },
+      "per_clip_object_endpoint_error_m": {
+        "pushbox_motion_2_with_contact": 3.3785
+      },
+      "per_clip_object_displacement_m": {
+        "pushbox_motion_2_with_contact": 0.7527
+      },
+      "n_task_success": 0,
+      "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+      "failure_details": {
+        "pushbox_motion_2_with_contact": {
+          "step": 88,
+          "root_height_error_m": 0.002244234085083008,
+          "tilt_cosine_error": 0.010877251625061035,
+          "object_position_error_m": 0.75275057554245,
+          "triggers": [
+            "object_position"
+          ]
+        }
+      }
+    },
+    "held_out_intermediate": {
+      "500": {
+        "norm_return": 0.022080454975366592,
+        "norm_return_framew": 0.022080454975366592,
+        "n_failed": 1,
+        "failed": [
+          "pushbox_motion_2_with_contact"
+        ],
+        "per_clip": {
+          "pushbox_motion_2_with_contact": 0.0221
+        },
+        "object_position_rmse_m_alive": 0.12232239544391632,
+        "per_clip_object_rmse_m_alive": {
+          "pushbox_motion_2_with_contact": 0.1223
+        },
+        "per_clip_completion": {
+          "pushbox_motion_2_with_contact": 0.0574
+        },
+        "failure_details": {
+          "pushbox_motion_2_with_contact": {
+            "step": 58,
+            "root_height_error_m": 0.256954163312912,
+            "tilt_cosine_error": 0.34519290924072266,
+            "object_position_error_m": 0.2578953802585602,
+            "triggers": [
+              "robot_height"
+            ]
+          }
+        }
+      },
+      "1000": {
+        "norm_return": 0.1527843028306961,
+        "norm_return_framew": 0.1527843028306961,
+        "n_failed": 1,
+        "failed": [
+          "pushbox_motion_2_with_contact"
+        ],
+        "per_clip": {
+          "pushbox_motion_2_with_contact": 0.1528
+        },
+        "object_position_rmse_m_alive": 0.09680087864398956,
+        "per_clip_object_rmse_m_alive": {
+          "pushbox_motion_2_with_contact": 0.0968
+        },
+        "per_clip_completion": {
+          "pushbox_motion_2_with_contact": 0.3066
+        },
+        "failure_details": {
+          "pushbox_motion_2_with_contact": {
+            "step": 310,
+            "root_height_error_m": 0.07037270069122314,
+            "tilt_cosine_error": 0.85237717628479,
+            "object_position_error_m": 0.16036467254161835,
+            "triggers": [
+              "robot_tilt"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "validation": {
+    "push_physics": {
+      "clips": 1,
+      "source_foot_fk_max_m": 6.166452948264123e-08,
+      "state_dim": 90,
+      "obs_dim": 122,
+      "actor_transfer_max_error": 4.470348358154297e-07,
+      "object_reward_gradient_finite": true,
+      "free_box_drop_m": 0.20110487937927246,
+      "physics_and_replay_checked": true
+    },
+    "carry_physics": {
+      "clips": 10,
+      "source_foot_fk_max_m": 4.992584194951633e-07,
+      "state_dim": 90,
+      "obs_dim": 122,
+      "actor_transfer_max_error": 1.430511474609375e-06,
+      "object_reward_gradient_finite": true,
+      "free_box_drop_m": 0.20110487937927246,
+      "physics_and_replay_checked": true
+    },
+    "push_val_data": {
+      "clips": 1,
+      "source_foot_fk_max_m": 6.40923190076137e-08,
+      "state_dim": 90,
+      "obs_dim": 122,
+      "actor_transfer_max_error": 3.5762786865234375e-07,
+      "object_reward_gradient_finite": true
+    },
+    "carry_val_data": {
+      "clips": 3,
+      "source_foot_fk_max_m": 6.674406449747039e-08,
+      "state_dim": 90,
+      "obs_dim": 122,
+      "actor_transfer_max_error": 6.556510925292969e-07,
+      "object_reward_gradient_finite": true
+    },
+    "lafan_regression": {
+      "last_iteration": 12,
+      "finite_metrics": true
+    },
+    "resume": {
+      "last_iteration": 42,
+      "finite_metrics": true
+    },
+    "checkpoint_weights": {
+      "wm_pi_critic_finite": true,
+      "final_checkpoint_loaded": true
+    },
+    "live_viewer": {
+      "backend": "Newton GL",
+      "bounded_seconds": 5,
+      "exit_code": 0
+    },
+    "rendering": {
+      "train_video_seconds": 16.04,
+      "held_out_video_seconds": 1.8,
+      "resolution": [
+        960,
+        540
+      ],
+      "fps": 25
+    }
+  },
+  "conclusion": "The shared SuperMimic learned-world-model/BPTT framework learned one physical box-pushing demonstration. The held-out motion failed; this is not a generalizable HOI controller.",
+  "scope": [
+    "Carry-box data and physics are validated but no carry policy was trained in this experiment.",
+    "ULTRA is inventoried; its 60 Hz/630D data and scaled object assets need a separate adapter.",
+    "I-BFM was reviewed for object context, hand geometry and task metrics; no replay or policy imported.",
+    "Contact reward uses a differentiable geometry proxy, not measured contact-force labels.",
+    "Converted data and checkpoints remain local; only code and this numerical report are published."
+  ],
+  "artifacts": {
+    "checkpoint": "logs/hoi_push_5090/ckpt_002000.pt",
+    "resumable": "logs/hoi_push_5090/last.pt",
+    "train_video": "results/hoi_push_2000_train.mp4",
+    "validation_video": "results/hoi_push_2000_val.mp4",
+    "training_log": "logs/hoi_push_5090/train_log.csv"
+  }
+}

@@ -189,6 +189,26 @@ HOI reports include per-clip completion and object-position RMSE **over survivin
 low RMSE on an early-failing clip is not task success. These rewards differ from LAFAN, so
 the LAFAN 0.82 reproduction threshold does not apply. With only one held-out push motion,
 this is a feasibility experiment rather than a broad generalization benchmark.
+The separate `n_task_success` metric requires completing the clip without termination,
+object endpoint error at most 0.15 m, and object tracking RMSE at most 0.20 m.
+
+**First RTX 5090 experiment (2,000 iterations, seed 0):** 500 world-model-only iterations
+followed by 1,500 actor/critic updates, 2,592,768 simulator transitions, approximately
+13.4 minutes in the training loop including compilation (startup is additional).
+
+| Evaluation | Normalized return | Clip completion | Object RMSE while alive | Object endpoint error | Task success |
+|---|---:|---:|---:|---:|---:|
+| Training motion | 0.9538 | 100% | 0.0528 m | 0.0962 m | 1/1 |
+| Held-out motion | 0.0503 | 8.7% | 0.3081 m | 3.3785 m | 0/1 |
+
+The training rollout physically moves the box 1.98 m. The held-out rollout terminates
+after 88 steps because its box is 0.753 m from the reference; the robot has not fallen.
+The 1,000-iteration checkpoint reached 30.7% on that held-out clip before falling, so
+training return improvement did not yield better generalization. This establishes a
+working single-demonstration HOI training path, **not a generalizable interaction policy**.
+Full provenance, parameters, intermediate evaluations and checks are in
+[`results/hoi_5090_experiment.json`](results/hoi_5090_experiment.json).
+Local videos: `results/hoi_push_2000_train.mp4` and `results/hoi_push_2000_val.mp4`.
 
 For a **live inference window** on the local desktop:
 
