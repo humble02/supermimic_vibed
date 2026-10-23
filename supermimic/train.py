@@ -304,8 +304,10 @@ with launch_simulation(sim_cfg, args):
     stats = {"r": [], "ep_len": [], "ep_ret": [], "term": [], "done": []}
     # Replay is not checkpointed; a resumed run must refill it before sampling windows.
     collect(max(args.warmup_steps, args.wm_window, Hh), stats)
-    log_f = open(os.path.join(args.log_dir, "train_log.csv"), "a")
-    if start_it == 0:
+    log_path = os.path.join(args.log_dir, "train_log.csv")
+    needs_header = not os.path.exists(log_path) or os.path.getsize(log_path) == 0
+    log_f = open(log_path, "a")
+    if needs_header:
         log_f.write("iteration,wall_h,sim_steps,wm_loss,wm_err8,pi_loss,v_loss,imag_rew,pi_gradnorm,imag_survival,sim_rew,ep_len,ep_ret_norm,term_frac,it_per_s,lr\n")
     t_start = time.time() - wall_offset
     t_log = time.time()

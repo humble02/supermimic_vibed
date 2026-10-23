@@ -71,6 +71,7 @@ def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
     ret = torch.zeros(C, device=dev)
     steps = torch.zeros(C, device=dev)
     object_error = torch.zeros(C, device=dev)
+    final_object_p = torch.zeros(C, 3, device=dev)
     failure_details = {}
     hist = None
     traj = {"root_p": [], "root_quat": [], "q": [], "f": [], "alive": []}
@@ -99,6 +100,8 @@ def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
         out = env.step(a)
         if args.task == "hoi":
             object_error += torch.where(alive, out["terms"]["e_object_pos"], 0.0)
+            finished_now = alive & (out["term"] | (out["f"] + 1 >= clip_end))
+            final_object_p[finished_now] = out["s1"][finished_now, 71:74]
             failed_now = (alive & out["term"]).nonzero().flatten().tolist()
             if failed_now:
                 S1 = task.unflatten_state(out["s1"])
@@ -124,9 +127,16 @@ def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
         "per_clip": {motion.names[i]: round(norm[i].item(), 4) for i in range(C)},
     }
     if args.task == "hoi":
-        res["object_position_rmse_m_alive"] = torch.sqrt(object_error / steps.clamp_min(1)).mean().item()
-        res["per_clip_object_rmse_m_alive"] = {motion.names[i]: round(torch.sqrt(object_error[i] / steps[i].clamp_min(1)).item(), 4) for i in range(C)}
+        rmse = torch.sqrt(object_error / steps.clamp_min(1))
+        endpoint = torch.linalg.vector_norm(final_object_p - motion.object_p[clip_end], dim=-1)
+        success = ~env.failed_eval & (endpoint <= 0.15) & (rmse <= 0.2)
+        res["object_position_rmse_m_alive"] = rmse.mean().item()
+        res["per_clip_object_rmse_m_alive"] = {motion.names[i]: round(rmse[i].item(), 4) for i in range(C)}
         res["per_clip_completion"] = {motion.names[i]: round((steps[i] / (motion.clip_len[i] - 1)).item(), 4) for i in range(C)}
+        res["per_clip_object_endpoint_error_m"] = {motion.names[i]: round(endpoint[i].item(), 4) for i in range(C)}
+        res["per_clip_object_displacement_m"] = {motion.names[i]: round(torch.linalg.vector_norm(final_object_p[i] - motion.object_p[motion.clip_start[i]]).item(), 4) for i in range(C)}
+        res["n_task_success"] = int(success.sum().item())
+        res["task_success_criteria"] = "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m"
         res["failure_details"] = failure_details
     if record:
         append_frame(env.state(), ~env.done_eval.clone())
