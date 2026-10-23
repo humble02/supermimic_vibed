@@ -143,7 +143,7 @@ def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
         extra = {}
         if args.task == "hoi":
             extra = dict(ref_object_p=motion.object_p.cpu().numpy(), ref_object_R=motion.object_R.cpu().numpy(),
-                         object_cfg=np.array(json.dumps(motion.object_cfg)))
+                         ref_contact=motion.contact.cpu().numpy(), object_cfg=np.array(json.dumps(motion.object_cfg)))
         np.savez_compressed(record, names=np.array(motion.names), **{k: torch.stack(v).numpy() for k, v in traj.items()},
                             ref_root_p=motion.root_p.cpu().numpy(), ref_root_R=motion.root_R.cpu().numpy(), ref_q=motion.q.cpu().numpy(),
                             clip_start=motion.clip_start.cpu().numpy(), clip_len=motion.clip_len.cpu().numpy(),

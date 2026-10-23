@@ -67,6 +67,9 @@ def main():
     ap.add_argument("--fps", type=int, default=25)
     ap.add_argument("--width", type=int, default=960)
     ap.add_argument("--height", type=int, default=540)
+    ap.add_argument("--azimuth", type=float, default=135.0, help="camera angle in degrees")
+    ap.add_argument("--elevation", type=float, default=-12.0, help="camera elevation in degrees")
+    ap.add_argument("--distance", type=float, default=3.6, help="camera distance in meters")
     ap.add_argument("--title", type=str, default="")
     ap.add_argument("--global_ghost", action="store_true", help="draw the reference at its global xy instead of anchored to the robot")
     a = ap.parse_args()
@@ -80,7 +83,7 @@ def main():
     data = mujoco.MjData(model)
     renderer = mujoco.Renderer(model, a.height, a.width)
     cam = mujoco.MjvCamera()
-    cam.distance, cam.azimuth, cam.elevation = 3.6, 135.0, -12.0
+    cam.distance, cam.azimuth, cam.elevation = a.distance, a.azimuth, a.elevation
     font = ImageFont.load_default(size=22) if hasattr(ImageFont, "load_default") else None
     clips = a.clips or names
     ff = subprocess.Popen(

@@ -221,6 +221,36 @@ This uses the installed Newton GL visualizer, follows the robot, and repeats the
 motion until the window closes. `--clip NAME` selects another clip; `--seconds 10` limits
 the session. The same player supports LAFAN checkpoints and `data/lafan1_g1`.
 
+**Carry-box experiment:** use the separate 10-motion training split and 3-motion validation
+split. This scene contains a 2 kg, 30 cm cube and two support surfaces; the policy must
+pick up the free box, transport it, and place it according to the reference.
+
+```bash
+./run_local.sh supermimic/train.py --task hoi \
+  --motion_dir data/hoi/omnicontact/carrybox/train --log_dir logs/hoi_carry_5090 \
+  --init_policy logs/lafan1_5090/ckpt_014000.pt \
+  --num_envs 1024 --wm_batch 512 --pi_batch 512 --buffer_steps 1000 \
+  --horizon 32 --wm_window 8 --wm_batches 5 --critic_epochs 2 \
+  --warmup_steps 64 --wm_only_iters 500 --iterations 4000 --ckpt_every 1000 --log_every 50
+
+./run_local.sh supermimic/evaluate.py --task hoi \
+  --motion_dir data/hoi/omnicontact/carrybox/val \
+  --run_dir logs/hoi_carry_5090/eval_val --ckpt logs/hoi_carry_5090/ckpt_004000.pt \
+  --record logs/hoi_carry_5090/val_004000.npz
+./run_local.sh tools/analyze_carry.py logs/hoi_carry_5090/val_004000.npz \
+  --out logs/hoi_carry_5090/eval_val/carry_metrics_004000.json
+./run_local.sh tools/play.py --checkpoint logs/hoi_carry_5090/ckpt_004000.pt \
+  --motion_dir data/hoi/omnicontact/carrybox/val --clip carrybox_motion_8_with_contact
+```
+
+The carry analyzer uses the **entire reference motion**, including the portion after an
+early termination. It checks box clearance above the floor/support surfaces, position
+tracking, and geometric proximity of both hand capsules during expected carrying phases.
+Its partial lift-and-transport flag additionally requires a rise of more than 3 cm above
+the initial box center and at least 10 cm horizontal displacement within a continuous
+segment lasting at least 0.3 s. This excludes sliding off a table and stationary jitter.
+Hand proximity is not measured contact force, and partial carrying is not full task success.
+
 ### 2. Data: LAFAN1 motions and the G1 model
 
 | What | Source | License | Goes to |
