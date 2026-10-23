@@ -74,6 +74,133 @@ Then start the long-lived container (repository mounted at `/workspace/supermimi
 docker/run_container.sh 0 128g     # GPU index 0, 128 GB memory cap
 ```
 
+### Alternative: local environment without Docker
+
+On a Linux host with Python 3.12, `uv`, a C/C++ compiler, the NVIDIA driver, and the usual
+OpenGL/EGL libraries already installed, use the project-local environment:
+
+```bash
+bash tools/setup_local.sh
+bash tools/download_data.sh --local
+./run_local.sh tools/test_env.py
+```
+
+This installs the same frozen dependency graph and extras as the pinned kit-less Dockerfile
+into `.venv/`, with downloads cached in `.cache/uv/`. Existing Conda environments are unaffected.
+`run_local.sh` selects this interpreter and the project's Warp/Inductor caches; it runs Python
+scripts in the foreground. The original `run_train.sh` remains the Docker/tmux launcher.
+
+For a first training check on a 32 GB GPU:
+
+```bash
+./run_local.sh supermimic/train.py --log_dir logs/lafan1_5090_smoke \
+  --num_envs 1024 --wm_batch 1024 --pi_batch 1024 --amp bf16 --iterations 600
+```
+
+The default first 500 iterations update only the world model. Run beyond that point to check
+the policy/critic updates and their memory usage. `pi_batch` is independent of `num_envs`;
+reducing only the number of simulator environments does not reduce the imagined rollout batch.
+Keep the default horizon (32) and buffer length (1000) for this check. First-run compilation
+is included in startup/training time; short-run throughput is not steady-state throughput.
+
+Local verification on an RTX 5090 (32 GB, driver 580.178.04, PyTorch 2.11.0+cu130) completed
+600 iterations with both the smaller configuration above and the original defaults
+(`num_envs=4096`, `wm_batch=2048`, `pi_batch=4096`, `horizon=32`, `buffer_steps=1000`, bf16).
+Each run included 100 policy/critic updates after the 500-iteration world-model warm-up.
+Sampled whole-GPU memory peaks, including the desktop, were 7.6 GiB and 19.5 GiB respectively;
+the default run measured approximately 2.5–3.0 iterations/s after compilation. These short runs
+verify training feasibility, not the final tracking return. Local logs and checkpoints are in
+`logs/lafan1_5090_smoke/` and `logs/lafan1_5090_default_smoke/`.
+
+To start a separate, longer run with the original training configuration:
+
+```bash
+./run_local.sh supermimic/train.py --log_dir logs/lafan1_5090 --iterations 20000
+```
+
+### Experimental G1 human-object interaction
+
+The `hoi` task uses the same replay, learned world model, differentiable imagined rollouts,
+and critic as the LAFAN task. It adds a **free dynamic box**, object observations and goals,
+object dynamics prediction, hand/object geometry rewards, and object-distance termination.
+Reference box poses are applied only at resets. The actor still controls the G1's 29 joints.
+The HOI robot is a separate asset with collision capsules on the palms; the baseline asset
+is preserved. Carry scenes also include the two stationary support tables from the data.
+
+The local data review covered [ULTRA](https://github.com/Sirui-Xu/ULTRA),
+[OmniContact](https://github.com/Ingrid789/OmniContact_sim2sim), and
+[I-BFM](https://github.com/Roboparty/I-BFM-Code). This first dataset uses OmniContact's
+15 available box motions (232.18 seconds): 10 carry + 1 push for training, 3 carry + 1 push
+held out. Entire source motions are held out before any temporal sampling. ULTRA's 4,066
+local G1 augmented motions use another layout and object assets; they are inventoried but
+not mixed into this first experiment. I-BFM informed the hand collision proxy and object
+context design; its policy and replay buffer are not used.
+
+Prepare the dataset from the local repositories (override `--omnicontact`, `--ultra`, and
+`--ibfm` for different locations), then convert and validate the separate robot asset:
+
+```bash
+./run_local.sh tools/prepare_hoi.py
+./run_local.sh tools/mjcf_to_usd.py \
+  --src data/g1_description/g1_29dof_hoi.xml --dst data/g1_hoi_usd
+./run_local.sh tools/test_hoi.py
+./run_local.sh tools/test_hoi.py --motion_dir data/hoi/omnicontact/carrybox/train
+```
+
+`data/hoi/omnicontact/manifest.json` records source commit, hashes, splits, coordinate and
+joint conventions. Raw/converted motion data remains local and is excluded from Git; its
+OmniContact CC BY-NC-SA 4.0 terms remain applicable. The checks compare source FK, preserve
+the LAFAN actor's initial outputs, verify object-reward gradients, and test free-box gravity.
+The first task uses a cuboid with source size/mass and recomputed inertia; it is not an exact
+reproduction of the original OmniContact or I-BFM simulator or training results.
+
+A bounded push-box experiment on one GPU:
+
+```bash
+./run_local.sh supermimic/train.py --task hoi \
+  --motion_dir data/hoi/omnicontact/pushbox/train --log_dir logs/hoi_push_5090 \
+  --init_policy logs/lafan1_5090/ckpt_014000.pt \
+  --num_envs 512 --wm_batch 512 --pi_batch 512 --buffer_steps 1000 \
+  --horizon 32 --wm_window 8 --wm_batches 5 --critic_epochs 2 \
+  --wm_only_iters 500 --iterations 2000 --ckpt_every 500
+```
+
+`--init_policy` embeds a matching LAFAN actor with zero initial weights for new object
+inputs; the HOI world model is learned from scratch. Omit it to start all networks from
+scratch. `--no_compile` is available for short integration checks. The first policy update
+after world-model warm-up can spend several minutes compiling the new gradient graphs.
+For carry-box experiments, select `data/hoi/omnicontact/carrybox/train` and a separate log
+directory; do not mix different object geometries into one run.
+
+Evaluate the held-out motion and save a video trajectory:
+
+```bash
+./run_local.sh supermimic/evaluate.py --task hoi \
+  --motion_dir data/hoi/omnicontact/pushbox/val \
+  --run_dir logs/hoi_push_5090/eval_val \
+  --ckpt logs/hoi_push_5090/ckpt_002000.pt \
+  --record logs/hoi_push_5090/val_traj.npz
+./run_local.sh tools/render.py logs/hoi_push_5090/val_traj.npz \
+  results/hoi_push_val.mp4 --seconds 20 --global_ghost
+```
+
+Use `pushbox/train` and a separate `eval_train` directory for training-set evaluation.
+HOI reports include per-clip completion and object-position RMSE **over surviving steps**;
+low RMSE on an early-failing clip is not task success. These rewards differ from LAFAN, so
+the LAFAN 0.82 reproduction threshold does not apply. With only one held-out push motion,
+this is a feasibility experiment rather than a broad generalization benchmark.
+
+For a **live inference window** on the local desktop:
+
+```bash
+./run_local.sh tools/play.py --checkpoint logs/hoi_push_5090/ckpt_002000.pt \
+  --motion_dir data/hoi/omnicontact/pushbox/val
+```
+
+This uses the installed Newton GL visualizer, follows the robot, and repeats the selected
+motion until the window closes. `--clip NAME` selects another clip; `--seconds 10` limits
+the session. The same player supports LAFAN checkpoints and `data/lafan1_g1`.
+
 ### 2. Data: LAFAN1 motions and the G1 model
 
 | What | Source | License | Goes to |

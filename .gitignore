@@ -1,5 +1,6 @@
 # caches and build output
 .cache/
+.venv/
 __pycache__/
 *.pyc
 build_*.log

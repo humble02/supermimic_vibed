@@ -46,11 +46,13 @@ class TrackingSim:
     Must be constructed inside ``launch_simulation(sim_cfg, ...)`` with ``sim_cfg`` from :func:`make_sim`.
     """
 
+    flatten_state = staticmethod(flatten_state)
+
     def __init__(self, sim_cfg, num_envs: int, motion: MotionLib, mdp: MDP, gamma: float = 0.99, eval_mode: bool = False,
-                 max_episode_steps: int = 500, reset_noise: bool = True):
+                 max_episode_steps: int = 500, reset_noise: bool = True, scene_cfg=None):
         self.device = sim_cfg.device
         self.sim = SimulationContext(sim_cfg)
-        self.scene = instantiate(TrackingSceneCfg(num_envs=num_envs, env_spacing=0.0, replicate_physics=True))
+        self.scene = instantiate(scene_cfg or TrackingSceneCfg(num_envs=num_envs, env_spacing=0.0, replicate_physics=True))
         self.sim.reset()
         self.robot = self.scene["robot"]
         assert list(self.robot.joint_names) == G1_JOINT_NAMES, self.robot.joint_names
@@ -91,7 +93,8 @@ class TrackingSim:
         self.start_bin = torch.zeros(self.N, dtype=torch.long, device=dev)
         self.ep_disc_ret = torch.zeros(self.N, device=dev)
         self.ep_ret = torch.zeros(self.N, device=dev)
-        self.G_max = MAX_STEP_REWARD / (1 - gamma)
+        self.max_step_reward = getattr(mdp, "max_step_reward", MAX_STEP_REWARD)
+        self.G_max = self.max_step_reward / (1 - gamma)
         self.bin_G = torch.full((motion.num_bins,), 0.0, device=dev)
         self.bin_w_avg = torch.full((motion.num_bins,), 1.0 / motion.num_bins, device=dev)
         self.done_eval = torch.zeros(self.N, dtype=torch.bool, device=dev)
@@ -193,7 +196,7 @@ class TrackingSim:
         target = self.default_q + xi[:, 1:30] + self.alpha * a
         self.robot.set_joint_position_target_index(target=target)
         self.scene.write_data_to_sim()
-        self.sim.step(render=False)
+        self.sim.step(render=self.eval_mode and self.sim.is_rendering)
         self.scene.update(CONTROL_DT)
         S1 = self.state()
         f1 = f + 1
@@ -203,7 +206,7 @@ class TrackingSim:
         timeout = (f1 >= clip_end) | (ep_step + 1 >= self.max_episode_steps)
         done = term | timeout
         out = {
-            "s": flatten_state(S), "a": a.clone(), "a_prev": a_prev, "f": f, "s1": flatten_state(S1), "r": r,
+            "s": self.flatten_state(S), "a": a.clone(), "a_prev": a_prev, "f": f, "s1": self.flatten_state(S1), "r": r,
             "term": term, "done": done, "ep_step": ep_step, "xi": xi, "terms": terms,
         }  # fmt: skip
         # bookkeeping
@@ -225,6 +228,6 @@ class TrackingSim:
             b = self.start_bin[ids]
             self.bin_G.index_put_((b,), 0.8 * self.bin_G[b] + 0.2 * G)
             out["ep_len"] = T
-            out["ep_ret_norm"] = self.ep_ret[ids] / (T * MAX_STEP_REWARD)
+            out["ep_ret_norm"] = self.ep_ret[ids] / (T * self.max_step_reward)
             self.reset(ids)
         return out

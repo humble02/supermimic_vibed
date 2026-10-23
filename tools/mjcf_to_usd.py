@@ -1,6 +1,7 @@
 """Convert the G1 MJCF to USD with the standalone Isaac Sim MJCF importer (no Kit)."""
 import os
 import sys
+import argparse
 
 from pxr import Plug
 
@@ -12,5 +13,10 @@ from isaacsim.asset.importer.mjcf import MJCFImporter, MJCFImporterConfig
 
 src = os.path.join(here, "..", "data", "g1_description", "g1_29dof.xml")
 dst = os.path.join(here, "..", "data", "g1_usd")
+parser = argparse.ArgumentParser()
+parser.add_argument("--src", default=src)
+parser.add_argument("--dst", default=dst)
+args = parser.parse_args()
+src, dst = args.src, args.dst
 cfg = MJCFImporterConfig(mjcf_path=os.path.normpath(src), usd_path=os.path.normpath(dst))
 print(MJCFImporter(cfg).import_mjcf())

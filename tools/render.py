@@ -5,6 +5,7 @@ Usage: MUJOCO_GL=egl python tools/render.py traj.npz out.mp4 --clips dance1_subj
 """
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -22,8 +23,8 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MJCF = os.path.join(ROOT, "data", "g1_description", "g1_29dof.xml")
 
 
-def two_robot_xml() -> str:
-    xml = open(MJCF).read()
+def two_robot_xml(object_cfg=None) -> str:
+    xml = open(MJCF if object_cfg is None else MJCF.replace("g1_29dof.xml", "g1_29dof_hoi.xml")).read()
     xml = re.sub(r'meshdir="[^"]*"', 'meshdir="' + os.path.join(ROOT, 'data', 'g1_description') + '/"', xml)
     body = xml[xml.index('<body name="pelvis"') : xml.index("</worldbody>")]
     ghost = re.sub(r' name="([^"]+)"', r' name="ref_\1"', body)
@@ -35,6 +36,15 @@ def two_robot_xml() -> str:
     <geom name="floor" type="plane" size="0 0 0.05" material="grid" contype="0" conaffinity="0"/>
     """
     xml = xml.replace("</worldbody>", ghost + scene + "</worldbody>")
+    if object_cfg:
+        size = " ".join(str(x) for x in object_cfg["half_size"])
+        boxes = ""
+        for name, color in (("hoi_object", "0.6 0.35 0.15 1"), ("ref_object", "0.35 0.65 1 0.25")):
+            boxes += f'<body name="{name}"><freejoint/><geom type="box" size="{size}" rgba="{color}" contype="0" conaffinity="0"/></body>'
+        if object_cfg["tables"]:
+            for i in range(2):
+                boxes += f'<body name="hoi_table{i}"><freejoint/><geom type="box" size="0.2 0.2 0.01" rgba="0.3 0.4 0.5 1" contype="0" conaffinity="0"/></body>'
+        xml = xml.replace("</worldbody>", boxes + "</worldbody>")
     assets = """
     <texture name="grid" type="2d" builtin="checker" rgb1="0.92 0.93 0.94" rgb2="0.80 0.82 0.85" width="512" height="512"/>
     <material name="grid" texture="grid" texrepeat="8 8" reflectance="0.1"/>
@@ -63,7 +73,8 @@ def main():
 
     d = dict(np.load(a.traj))
     names = list(d["names"])
-    model = mujoco.MjModel.from_xml_string(two_robot_xml())
+    object_cfg = json.loads(str(d["object_cfg"])) if "object_cfg" in d else None
+    model = mujoco.MjModel.from_xml_string(two_robot_xml(object_cfg))
     model.vis.headlight.ambient[:] = 0.45
     model.vis.headlight.diffuse[:] = 0.55
     data = mujoco.MjData(model)
@@ -98,6 +109,18 @@ def main():
                 data.qpos[36:38] = d["root_p"][tt, c][:2]
             data.qpos[39:43] = _mat_to_quat(d["ref_root_R"][f])
             data.qpos[43:72] = d["ref_q"][f]
+            if object_cfg:
+                data.qpos[72:75] = d["object_p"][tt, c]
+                data.qpos[75:79] = d["object_quat"][tt, c]
+                data.qpos[79:82] = d["ref_object_p"][f]
+                if not a.global_ghost:
+                    data.qpos[79:81] += d["root_p"][tt, c][:2] - d["ref_root_p"][f][:2]
+                data.qpos[82:86] = _mat_to_quat(d["ref_object_R"][f])
+                if object_cfg["tables"]:
+                    for i in range(2):
+                        start = 86 + 7 * i
+                        data.qpos[start:start+3] = d["table_p"][tt, c, i]
+                        data.qpos[start+3:start+7] = [1, 0, 0, 0]
             mujoco.mj_kinematics(model, data)
             cam.lookat[:] = [data.qpos[0], data.qpos[1], 0.75]
             renderer.update_scene(data, camera=cam)
@@ -105,14 +128,16 @@ def main():
             draw = ImageDraw.Draw(img)
             label = f"{a.title}  {clip}  t={(f - int(d['clip_start'][c])) * 0.02:5.1f}s"
             if fell_at is not None:
-                label += "  [terminated]"
+                failed = bool(d["failed"][c]) if "failed" in d else True
+                label += "  [failed]" if failed else "  [completed]"
             for xy, txt in (((16, 12), label), ((16, a.height - 38), "solid: simulated G1 policy (Isaac Lab + MuJoCo-Warp)   blue ghost: reference")):
                 bb = draw.textbbox(xy, txt, font=font)
                 draw.rectangle((bb[0] - 6, bb[1] - 4, bb[2] + 6, bb[3] + 4), fill=(255, 255, 255))
                 draw.text(xy, txt, fill=(20, 20, 20), font=font)
             ff.stdin.write(np.asarray(img).tobytes())
     ff.stdin.close()
-    ff.wait()
+    if ff.wait() != 0:
+        raise RuntimeError("ffmpeg failed to encode the video")
     print("wrote", a.out)
 
 

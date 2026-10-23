@@ -15,6 +15,9 @@ sys.path.insert(0, REPO)
 from isaaclab.app import add_launcher_args, launch_simulation
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--task", choices=["lafan", "hoi"], default="lafan")
+parser.add_argument("--init_policy", default=None, help="initialize HOI policy from a LAFAN checkpoint; train a new world model")
+parser.add_argument("--no_compile", action="store_true", help="eager execution for short integration checks")
 parser.add_argument("--num_envs", type=int, default=4096)
 parser.add_argument("--iterations", type=int, default=320_000)
 parser.add_argument("--buffer_steps", type=int, default=1000)
@@ -50,13 +53,17 @@ import torch
 import torch.nn as nn
 
 from supermimic.buffer import ReplayBuffer
-from supermimic.env import TrackingSim, make_sim
+from supermimic.env import make_sim
 from supermimic.kinematics import G1Kinematics
-from supermimic.mdp import CRITIC_EXTRA, INV_DIM, MDP, OBS_DIM, invariant_features, normalize_xi, unflatten_state
-from supermimic.motion import MotionLib
+from supermimic.mdp import normalize_xi
 import supermimic.networks as networks
-from supermimic.networks import Critic, Policy, WorldModel
+from supermimic.networks import Critic, Policy
 from supermimic.robot import default_joint_pos_list
+from supermimic.tasks import get_task
+
+task = get_task(args.task)
+MotionLib, MDP, WorldModel, TrackingSim = task.MotionLib, task.MDP, task.WorldModel, task.TrackingSim
+unflatten_state, OBS_DIM = task.unflatten_state, task.obs_dim
 
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
@@ -70,12 +77,17 @@ kin = G1Kinematics(dev)
 motion = MotionLib.from_dir(args.motion_dir, kin, dev)
 mdp = MDP(kin, motion, torch.tensor(default_joint_pos_list(), device=dev))
 K, Hh, HZ = args.goal_frames, args.hist, args.horizon
-GOAL_DIM = 73 * K
-CRITIC_IN = INV_DIM + CRITIC_EXTRA + GOAL_DIM
+GOAL_DIM = task.goal_frame_dim * K
+CRITIC_IN = task.critic_dim + GOAL_DIM
 
 wm = WorldModel().to(dev)
 pi = Policy(OBS_DIM, GOAL_DIM, hist=Hh).to(dev)
 critic = Critic(CRITIC_IN).to(dev)
+if args.init_policy:
+    if args.task != "hoi" or args.resume:
+        raise ValueError("--init_policy is for a new HOI run only")
+    from supermimic.hoi import initialize_policy
+    initialize_policy(pi, torch.load(args.init_policy, map_location=dev), K, Hh)
 opt_wm = torch.optim.Adam(wm.parameters(), lr=args.lr)
 opt_pi = torch.optim.Adam(pi.parameters(), lr=args.lr, betas=(0.9, 0.95))
 opt_v = torch.optim.Adam(critic.parameters(), lr=args.lr)
@@ -88,8 +100,7 @@ if args.resume:
 
 
 # per-component floors on the error normalization (pos, rot, lin vel, ang vel, q, qd increments)
-ERR_FLOOR = torch.cat((torch.full((3,), 3e-3), torch.full((3,), 5e-3), torch.full((3,), 2e-2), torch.full((3,), 5e-2),
-                       torch.full((29,), 3e-3), torch.full((29,), 5e-2))).to(dev)  # fmt: skip
+ERR_FLOOR = torch.tensor(task.error_floor, device=dev)
 
 
 def _wm_rollout(s, a, xi):
@@ -98,7 +109,7 @@ def _wm_rollout(s, a, xi):
     for j in range(args.wm_window):
         S = wm.step(S, a[:, j], normalize_xi(xi[:, j]))
         preds.append(S)
-    return tuple(torch.stack([P[i] for P in preds], 1) for i in range(6))  # (B, k, ...)
+    return tuple(torch.stack([P[i] for P in preds], 1) for i in range(len(S)))  # (B, k, ...)
 
 
 def _wm_err(S_hat, s1, mask):
@@ -125,11 +136,12 @@ def _critic_input(S, f, xi_n, g):
     return torch.cat((mdp.critic_features(S, f, xi_n), g), -1)
 
 
-wm_rollout = torch.compile(_wm_rollout)
-wm_err = torch.compile(_wm_err)
-imag_step = torch.compile(_imag_step)
-reward_term = torch.compile(_reward_term)
-critic_input_c = torch.compile(_critic_input)
+compile_fn = (lambda f: f) if args.no_compile else torch.compile
+wm_rollout = compile_fn(_wm_rollout)
+wm_err = compile_fn(_wm_err)
+imag_step = compile_fn(_imag_step)
+reward_term = compile_fn(_reward_term)
+critic_input_c = compile_fn(_critic_input)
 
 
 def lr_at(it: int) -> float:
@@ -194,7 +206,7 @@ def policy_update():
         S, a_prev, o_hist, f, g = imag_step(S, o_hist, a_prev, f, xi, xi_n, g)
         Ss.append(S), As.append(a_prev), Fs.append(f), Gs.append(g)
     flat = lambda xs: torch.stack(xs).flatten(0, 1)  # noqa: E731  (H*B, ...)
-    S_all = tuple(flat([St[i] for St in Ss]) for i in range(6))
+    S_all = tuple(flat([St[i] for St in Ss]) for i in range(len(S)))
     f_all = flat(Fs)
     r, d = reward_term(S_all, f_all, flat(As), flat(Aps))
     r, d = r.view(HZ, B), d.view(HZ, B)
@@ -224,7 +236,7 @@ def policy_update():
     v_loss = torch.zeros(())
     if not args.no_critic:
         with torch.no_grad():
-            S_c = tuple(torch.cat((S0[i].unsqueeze(0), torch.stack([St[i].detach() for St in Ss])), 0).flatten(0, 1) for i in range(6))
+            S_c = tuple(torch.cat((S0[i].unsqueeze(0), torch.stack([St[i].detach() for St in Ss])), 0).flatten(0, 1) for i in range(len(S)))
             f_c = torch.cat((s["f"].unsqueeze(0), torch.stack(Fs)), 0).flatten()
             g_c = torch.cat((g0.unsqueeze(0), torch.stack(Gs)), 0).flatten(0, 1)
             xi_c = xi_n.unsqueeze(0).expand(HZ + 1, -1, -1).flatten(0, 1)
@@ -253,14 +265,14 @@ def policy_update():
     if PROFILE:
         torch.cuda.synchronize()
         print(f"[prof] imagine fwd {1e3*(tq1-tq0):.0f} ms | bwd {1e3*(tq2-tq1):.0f} ms | critic {1e3*(time.time()-tq2):.0f} ms", flush=True)
-    return loss.detach(), v_loss.detach(), (r_sum / HZ / 0.1).mean(), gn.detach(), c.mean().detach()
+    return loss.detach(), v_loss.detach(), (r_sum / HZ / task.max_step_reward).mean(), gn.detach(), c.mean().detach()
 
 
 # ------------------------------------------------------------------------------------------------
 sim_cfg = make_sim(dev, args)
 with launch_simulation(sim_cfg, args):
     env = TrackingSim(sim_cfg, args.num_envs, motion, mdp, gamma=args.gamma)
-    buffer = ReplayBuffer(args.buffer_steps, args.num_envs, dev)
+    buffer = ReplayBuffer(args.buffer_steps, args.num_envs, dev, state_dim=task.state_dim)
     obs_hist = torch.zeros(args.num_envs, Hh, OBS_DIM, device=dev)
 
     @torch.no_grad()
@@ -282,7 +294,7 @@ with launch_simulation(sim_cfg, args):
             wm.in_norm.update(wm.inputs(S0, out["a"], normalize_xi(out["xi"])))
             wm.out_norm.update(wm.targets(S0, S1))
             sim_steps += args.num_envs
-            stats["r"].append(out["r"].mean() / 0.1)
+            stats["r"].append(out["r"].mean() / task.max_step_reward)
             if "ep_len" in out:
                 stats["ep_len"].append(out["ep_len"].mean())
                 stats["ep_ret"].append(out["ep_ret_norm"].mean())
@@ -290,8 +302,8 @@ with launch_simulation(sim_cfg, args):
                 stats["done"].append(out["done"].float().sum())
 
     stats = {"r": [], "ep_len": [], "ep_ret": [], "term": [], "done": []}
-    if start_it == 0:
-        collect(args.warmup_steps, stats)
+    # Replay is not checkpointed; a resumed run must refill it before sampling windows.
+    collect(max(args.warmup_steps, args.wm_window, Hh), stats)
     log_f = open(os.path.join(args.log_dir, "train_log.csv"), "a")
     if start_it == 0:
         log_f.write("iteration,wall_h,sim_steps,wm_loss,wm_err8,pi_loss,v_loss,imag_rew,pi_gradnorm,imag_survival,sim_rew,ep_len,ep_ret_norm,term_frac,it_per_s,lr\n")

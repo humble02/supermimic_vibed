@@ -21,6 +21,7 @@ sys.path.insert(0, REPO)
 from isaaclab.app import add_launcher_args, launch_simulation
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--task", choices=["lafan", "hoi"], default="lafan")
 parser.add_argument("--run_dir", type=str, required=True)
 parser.add_argument("--watch", action="store_true")
 parser.add_argument("--ckpt", type=str, default=None, help="evaluate one checkpoint")
@@ -34,12 +35,15 @@ import numpy as np
 import torch
 
 import supermimic.networks as networks
-from supermimic.env import TrackingSim, make_sim
+from supermimic.env import make_sim
 from supermimic.kinematics import G1Kinematics
-from supermimic.mdp import MAX_STEP_REWARD, OBS_DIM, MDP
-from supermimic.motion import MotionLib
 from supermimic.networks import Policy
 from supermimic.robot import default_joint_pos_list
+from supermimic.tasks import get_task
+
+task = get_task(args.task)
+MotionLib, MDP, TrackingSim = task.MotionLib, task.MDP, task.TrackingSim
+OBS_DIM, MAX_STEP_REWARD = task.obs_dim, task.max_step_reward
 
 torch.backends.cuda.matmul.allow_tf32 = True
 dev = "cuda:0"
@@ -52,9 +56,11 @@ C = len(motion.names)
 @torch.no_grad()
 def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
     a_ = ck["args"]
+    if a_.get("task", "lafan") != args.task:
+        raise ValueError("Checkpoint task differs from --task")
     K, Hh = a_["goal_frames"], a_["hist"]
     networks.AMP_DTYPE = torch.bfloat16 if a_.get("amp", "none") == "bf16" else None
-    pi = Policy(OBS_DIM, 73 * K, hist=Hh).to(dev)
+    pi = Policy(OBS_DIM, task.goal_frame_dim * K, hist=Hh).to(dev)
     pi.load_state_dict(ck["pi"])
     pi.eval()
     ids = torch.arange(C, device=dev)
@@ -64,20 +70,48 @@ def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
     clip_end = motion.clip_end.clone()
     ret = torch.zeros(C, device=dev)
     steps = torch.zeros(C, device=dev)
+    object_error = torch.zeros(C, device=dev)
+    failure_details = {}
     hist = None
     traj = {"root_p": [], "root_quat": [], "q": [], "f": [], "alive": []}
+    if args.task == "hoi":
+        traj.update(object_p=[], object_quat=[], table_p=[])
+
+    def append_frame(S, alive):
+        from supermimic.rotations import mat_to_quat
+        traj["root_p"].append(S[0].cpu()), traj["root_quat"].append(mat_to_quat(S[1]).cpu())
+        traj["q"].append(S[4].cpu()), traj["f"].append(env.f.cpu()), traj["alive"].append(alive.cpu())
+        if args.task == "hoi":
+            traj["object_p"].append(S[6].cpu())
+            traj["object_quat"].append(mat_to_quat(S[7]).cpu())
+            traj["table_p"].append(S[10].cpu().clone())
+
     while not bool(env.done_eval.all()):
+        if not env.sim.is_running():
+            raise SystemExit("Viewer closed before evaluation completed; no score saved.")
         S = env.state()
         o = mdp.obs(S, env.a_prev, env.xi, env.f)
         hist = o.unsqueeze(1).repeat(1, Hh, 1) if hist is None else torch.cat((hist[:, 1:], o.unsqueeze(1)), 1)
         a = pi(hist, motion.goal(env.f, K))
         alive = ~env.done_eval.clone()
         if record:
-            from supermimic.rotations import mat_to_quat
-
-            traj["root_p"].append(S[0].cpu()), traj["root_quat"].append(mat_to_quat(S[1]).cpu())
-            traj["q"].append(S[4].cpu()), traj["f"].append(env.f.cpu()), traj["alive"].append(alive.cpu())
+            append_frame(S, alive)
         out = env.step(a)
+        if args.task == "hoi":
+            object_error += torch.where(alive, out["terms"]["e_object_pos"], 0.0)
+            failed_now = (alive & out["term"]).nonzero().flatten().tolist()
+            if failed_now:
+                S1 = task.unflatten_state(out["s1"])
+                for i in failed_now:
+                    frame = out["f"][i] + 1
+                    height = abs(S1[0][i, 2] - motion.root_p[frame, 2]).item()
+                    tilt = abs(S1[1][i, 2, 2] - motion.root_R[frame, 2, 2]).item()
+                    obj = out["terms"]["e_object_pos"][i].sqrt().item()
+                    failure_details[motion.names[i]] = {
+                        "step": int(steps[i].item()) + 1, "root_height_error_m": height,
+                        "tilt_cosine_error": tilt, "object_position_error_m": obj,
+                        "triggers": [name for name, hit in (("robot_height", height > mdp.cfg.term_height),
+                                     ("robot_tilt", tilt > mdp.cfg.term_tilt), ("object_position", obj > 0.75)) if hit]}
         ret += torch.where(alive, out["r"], 0.0)
         steps += alive.float()
         env.f = torch.minimum(env.f, clip_end - 1)  # finished clips keep stepping; keep f+1 in range
@@ -89,10 +123,21 @@ def evaluate(env: TrackingSim, ck: dict, record: str | None = None) -> dict:
         "failed": [motion.names[i] for i in env.failed_eval.nonzero().flatten().tolist()],
         "per_clip": {motion.names[i]: round(norm[i].item(), 4) for i in range(C)},
     }
+    if args.task == "hoi":
+        res["object_position_rmse_m_alive"] = torch.sqrt(object_error / steps.clamp_min(1)).mean().item()
+        res["per_clip_object_rmse_m_alive"] = {motion.names[i]: round(torch.sqrt(object_error[i] / steps[i].clamp_min(1)).item(), 4) for i in range(C)}
+        res["per_clip_completion"] = {motion.names[i]: round((steps[i] / (motion.clip_len[i] - 1)).item(), 4) for i in range(C)}
+        res["failure_details"] = failure_details
     if record:
+        append_frame(env.state(), ~env.done_eval.clone())
+        extra = {}
+        if args.task == "hoi":
+            extra = dict(ref_object_p=motion.object_p.cpu().numpy(), ref_object_R=motion.object_R.cpu().numpy(),
+                         object_cfg=np.array(json.dumps(motion.object_cfg)))
         np.savez_compressed(record, names=np.array(motion.names), **{k: torch.stack(v).numpy() for k, v in traj.items()},
                             ref_root_p=motion.root_p.cpu().numpy(), ref_root_R=motion.root_R.cpu().numpy(), ref_q=motion.q.cpu().numpy(),
-                            clip_start=motion.clip_start.cpu().numpy(), clip_len=motion.clip_len.cpu().numpy())  # fmt: skip
+                            clip_start=motion.clip_start.cpu().numpy(), clip_len=motion.clip_len.cpu().numpy(),
+                            failed=env.failed_eval.cpu().numpy(), **extra)  # fmt: skip
     return res
 
 
@@ -102,6 +147,9 @@ with launch_simulation(sim_cfg, args):
     if args.ckpt:
         ck = torch.load(args.ckpt, map_location=dev)
         res = evaluate(env, ck, args.record)
+        report = os.path.join(args.run_dir, os.path.basename(args.ckpt).replace(".pt", "_eval.json"))
+        os.makedirs(args.run_dir, exist_ok=True)
+        json.dump(res, open(report, "w"), indent=2)
         print(json.dumps({k: v for k, v in res.items() if k != "per_clip"}, indent=1))
         sys.exit(0)
     out_csv = os.path.join(args.run_dir, "eval.csv")

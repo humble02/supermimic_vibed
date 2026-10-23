@@ -28,7 +28,7 @@ class MotionLib:
             # resample to 50 Hz
             T_src = raw.shape[0]
             dur = (T_src - 1) / src_fps
-            n = int(np.floor(dur / CONTROL_DT)) + 1
+            n = T_src if np.isclose(src_fps * CONTROL_DT, 1.0) else int(np.floor(dur / CONTROL_DT)) + 1
             t = torch.arange(n, dtype=torch.float32) * CONTROL_DT * src_fps
             i0 = torch.clamp(t.floor().long(), max=T_src - 2)
             a = (t - i0.float()).clamp(0, 1)
@@ -72,7 +72,9 @@ class MotionLib:
         # 1 s bins
         bin_clip, bin_start = [], []
         for c in range(len(lens)):
-            nb = int(np.ceil(lens[c] / BIN_FRAMES))
+            # Resets require a next reference frame. A final bin containing only the
+            # terminal frame (e.g. an 801-frame 50 Hz clip) would index past the clip.
+            nb = int(np.ceil((lens[c] - 1) / BIN_FRAMES))
             for b in range(nb):
                 bin_clip.append(c)
                 bin_start.append(int(self.clip_start[c]) + b * BIN_FRAMES)
@@ -85,6 +87,7 @@ class MotionLib:
             s = bin_start[b]
             e = min(s + BIN_FRAMES, int(self.clip_end[c]) + 1)
             self.frame_bin[s:e] = b
+        self.frame_bin[self.clip_end] = self.frame_bin[self.clip_end - 1]
 
     @staticmethod
     def from_dir(path: str, kin: G1Kinematics, device: str) -> MotionLib:
