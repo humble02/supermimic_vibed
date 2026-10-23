@@ -1,0 +1,1650 @@
+{
+  "trained_implementation_commit": "ae35c3a5d89771fedb9c3ba62d112be664147639",
+  "analysis_implementation_commit": "3d8573e36040c8ea9854a2b4d59bb113c0be3836",
+  "hardware": "NVIDIA GeForce RTX 5090, 32 GB",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "mujoco": "3.15.0",
+    "mujoco-warp": "3.15.0",
+    "newton": "1.8.0.dev0",
+    "warp-lang": "1.17.0"
+  },
+  "dataset": {
+    "schema": "supermimic-hoi-v1",
+    "fps": 50,
+    "quaternion_order": "wxyz",
+    "joint_names": [
+      "left_hip_pitch_joint",
+      "left_hip_roll_joint",
+      "left_hip_yaw_joint",
+      "left_knee_joint",
+      "left_ankle_pitch_joint",
+      "left_ankle_roll_joint",
+      "right_hip_pitch_joint",
+      "right_hip_roll_joint",
+      "right_hip_yaw_joint",
+      "right_knee_joint",
+      "right_ankle_pitch_joint",
+      "right_ankle_roll_joint",
+      "waist_yaw_joint",
+      "waist_roll_joint",
+      "waist_pitch_joint",
+      "left_shoulder_pitch_joint",
+      "left_shoulder_roll_joint",
+      "left_shoulder_yaw_joint",
+      "left_elbow_joint",
+      "left_wrist_roll_joint",
+      "left_wrist_pitch_joint",
+      "left_wrist_yaw_joint",
+      "right_shoulder_pitch_joint",
+      "right_shoulder_roll_joint",
+      "right_shoulder_yaw_joint",
+      "right_elbow_joint",
+      "right_wrist_roll_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint"
+    ],
+    "contact_order": [
+      "left_foot",
+      "right_foot",
+      "left_hand",
+      "right_hand"
+    ],
+    "source": "https://github.com/Ingrid789/OmniContact_sim2sim",
+    "source_commit": "1cf9ddd4067cbe5710b1f475e96f9c69f88055e2",
+    "source_license": "CC-BY-NC-SA-4.0",
+    "split_rule": "hold out the last 20% (at least one) complete source motions per family; no window leakage",
+    "clips": [
+      {
+        "name": "carrybox_motion_0_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 275,
+        "duration_s": 5.48,
+        "source_file": "data/carrybox/carrybox_motion_0_with_contact.npz",
+        "source_sha256": "cfefa55a0092a43026340a90a6d42fabd35cc6ed066ed09bc451f53549c4f933",
+        "hand_contact_fraction": 0.8181818127632141,
+        "object_displacement_m": 0.6114040613174438
+      },
+      {
+        "name": "carrybox_motion_10_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 1500,
+        "duration_s": 29.98,
+        "source_file": "data/carrybox/carrybox_motion_10_with_contact.npz",
+        "source_sha256": "916e6a3ec5f8ac9c7d26c6819eda4f17a5d32dc9a14c8aaeab8f047b76371cdd",
+        "hand_contact_fraction": 0.8640000224113464,
+        "object_displacement_m": 1.841457724571228
+      },
+      {
+        "name": "carrybox_motion_11_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 400,
+        "duration_s": 7.98,
+        "source_file": "data/carrybox/carrybox_motion_11_with_contact.npz",
+        "source_sha256": "bc0084c463064331bc8d209faaf9ce556e002bf508cb25427edbbc4ed6543487",
+        "hand_contact_fraction": 0.550000011920929,
+        "object_displacement_m": 3.7093162536621094
+      },
+      {
+        "name": "carrybox_motion_12_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 3257,
+        "duration_s": 65.12,
+        "source_file": "data/carrybox/carrybox_motion_12_with_contact.npz",
+        "source_sha256": "6eedff419b2fa0423adab369dc81e1bfc4af9ce68f75081f99727a34843456b6",
+        "hand_contact_fraction": 0.6720908880233765,
+        "object_displacement_m": 0.02655273862183094
+      },
+      {
+        "name": "carrybox_motion_1_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 900,
+        "duration_s": 17.98,
+        "source_file": "data/carrybox/carrybox_motion_1_with_contact.npz",
+        "source_sha256": "4cd51953bb44dcf52e3a1b9915c790c17c360ba7a3d0a2cd014ec871a7a65ff9",
+        "hand_contact_fraction": 0.8922222256660461,
+        "object_displacement_m": 3.3950369358062744
+      },
+      {
+        "name": "carrybox_motion_2_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 381,
+        "duration_s": 7.6,
+        "source_file": "data/carrybox/carrybox_motion_2_with_contact.npz",
+        "source_sha256": "6eac8f862726a4c29cf4adc5559ae2a1a38221092f92149fb2e234564f8a01da",
+        "hand_contact_fraction": 0.28871390223503113,
+        "object_displacement_m": 1.2283804416656494
+      },
+      {
+        "name": "carrybox_motion_3_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 335,
+        "duration_s": 6.68,
+        "source_file": "data/carrybox/carrybox_motion_3_with_contact.npz",
+        "source_sha256": "3503667d4b20422857702852edf711ce0a0039b1e91d4e79d103145d0b1c2a6b",
+        "hand_contact_fraction": 0.2597014904022217,
+        "object_displacement_m": 1.015683889389038
+      },
+      {
+        "name": "carrybox_motion_4_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 496,
+        "duration_s": 9.9,
+        "source_file": "data/carrybox/carrybox_motion_4_with_contact.npz",
+        "source_sha256": "ba5748d3548f42eb96a1d986472671e8c5b47fbb8f90ac7b87fa5569eecfc882",
+        "hand_contact_fraction": 0.6673387289047241,
+        "object_displacement_m": 1.3461194038391113
+      },
+      {
+        "name": "carrybox_motion_5_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 535,
+        "duration_s": 10.68,
+        "source_file": "data/carrybox/carrybox_motion_5_with_contact.npz",
+        "source_sha256": "02e1f267355a8bcb86f0201a9eed86a6e81175c89fb113ff82e1f9074776976b",
+        "hand_contact_fraction": 0.5943925380706787,
+        "object_displacement_m": 2.0676090717315674
+      },
+      {
+        "name": "carrybox_motion_6_with_contact",
+        "family": "carrybox",
+        "split": "train",
+        "frames": 618,
+        "duration_s": 12.34,
+        "source_file": "data/carrybox/carrybox_motion_6_with_contact.npz",
+        "source_sha256": "c8b2b1f7cce385f3738dd0defa6c29ac2288f48a1665d412ed502f42fd66a9cd",
+        "hand_contact_fraction": 0.6844660043716431,
+        "object_displacement_m": 2.1560373306274414
+      },
+      {
+        "name": "carrybox_motion_7_with_contact",
+        "family": "carrybox",
+        "split": "val",
+        "frames": 417,
+        "duration_s": 8.32,
+        "source_file": "data/carrybox/carrybox_motion_7_with_contact.npz",
+        "source_sha256": "983d2a538fc9842f9660dcbb9f1220975c5b946c4925de594b8639173523ca45",
+        "hand_contact_fraction": 0.7817745804786682,
+        "object_displacement_m": 1.3492823839187622
+      },
+      {
+        "name": "carrybox_motion_8_with_contact",
+        "family": "carrybox",
+        "split": "val",
+        "frames": 318,
+        "duration_s": 6.34,
+        "source_file": "data/carrybox/carrybox_motion_8_with_contact.npz",
+        "source_sha256": "b30acdb4f3d553144f41596dca64b8257e714b3a8906a19761de98dee95ab526",
+        "hand_contact_fraction": 0.8364779949188232,
+        "object_displacement_m": 2.129734992980957
+      },
+      {
+        "name": "carrybox_motion_9_with_contact",
+        "family": "carrybox",
+        "split": "val",
+        "frames": 379,
+        "duration_s": 7.56,
+        "source_file": "data/carrybox/carrybox_motion_9_with_contact.npz",
+        "source_sha256": "059c8153c4170c6ea643ec082be571817387a7db966cef16b091ec373842b881",
+        "hand_contact_fraction": 0.8416886329650879,
+        "object_displacement_m": 2.7343497276306152
+      }
+    ],
+    "duration_seconds": {
+      "train": 173.74,
+      "val": 22.22
+    },
+    "object": {
+      "half_size": [
+        0.15,
+        0.15,
+        0.15
+      ],
+      "mass": 2.0,
+      "friction": 0.5,
+      "tables": true,
+      "table_half_size": [
+        0.2,
+        0.2,
+        0.01
+      ],
+      "robot_palm_capsule_radius": 0.035,
+      "physics_note": "Box inertia recomputed from size/mass; baseline G1 plus collision palms. Not an exact OmniContact simulator reproduction."
+    }
+  },
+  "sha256": {
+    "logs/lafan1_5090/ckpt_014000.pt": "47351f5639fc1cffa374efcb421ff4b967f1598174b2b4baeb1df92d4e427332",
+    "data/hoi/omnicontact/manifest.json": "2a6ec58aab352b1f038e2c382d507182039f1f103ab048493619a4eca41a6eba",
+    "data/g1_description/g1_29dof_hoi.xml": "699de196aa559ec9eb45afdc8f5653d91e4c1a874e7f04af0ba361167d96b6cd",
+    "data/g1_hoi_usd/g1_29dof_hoi/g1_29dof_hoi.usda": "b79f5d54982304f3b33919d24fdd1290f470a2f0629409572cb2f7b2d0b28b67",
+    "logs/hoi_carry_5090/ckpt_004000.pt": "ed8612d9fa561745821f7b26ae25515c0be5d73ad2151ff70059d3a9be5499f7"
+  },
+  "reference_summary": [
+    {
+      "clip": "carrybox_motion_0_with_contact",
+      "split": "train",
+      "seconds": 5.48,
+      "box_z_start": 0.745,
+      "box_z_max": 0.866,
+      "box_z_end": 0.835,
+      "xy_displacement": 0.605,
+      "both_hand_contact_fraction": 0.818,
+      "table_z": [
+        0.5853185057640076,
+        0.6554669141769409
+      ]
+    },
+    {
+      "clip": "carrybox_motion_10_with_contact",
+      "split": "train",
+      "seconds": 29.98,
+      "box_z_start": 0.187,
+      "box_z_max": 0.806,
+      "box_z_end": 0.184,
+      "xy_displacement": 1.841,
+      "both_hand_contact_fraction": 0.864,
+      "table_z": [
+        0.01673533394932747,
+        0.003719545667991042
+      ]
+    },
+    {
+      "clip": "carrybox_motion_11_with_contact",
+      "split": "train",
+      "seconds": 7.98,
+      "box_z_start": 0.619,
+      "box_z_max": 0.81,
+      "box_z_end": 0.17,
+      "xy_displacement": 3.682,
+      "both_hand_contact_fraction": 0.55,
+      "table_z": [
+        0.4590155780315399,
+        -0.010000310838222504
+      ]
+    },
+    {
+      "clip": "carrybox_motion_12_with_contact",
+      "split": "train",
+      "seconds": 65.12,
+      "box_z_start": 0.731,
+      "box_z_max": 0.903,
+      "box_z_end": 0.73,
+      "xy_displacement": 0.027,
+      "both_hand_contact_fraction": 0.672,
+      "table_z": [
+        0.5605422258377075,
+        0.5502386689186096
+      ]
+    },
+    {
+      "clip": "carrybox_motion_1_with_contact",
+      "split": "train",
+      "seconds": 17.98,
+      "box_z_start": 0.165,
+      "box_z_max": 0.901,
+      "box_z_end": 0.237,
+      "xy_displacement": 3.394,
+      "both_hand_contact_fraction": 0.892,
+      "table_z": [
+        0.005414653569459915,
+        0.05711934715509415
+      ]
+    },
+    {
+      "clip": "carrybox_motion_2_with_contact",
+      "split": "train",
+      "seconds": 7.6,
+      "box_z_start": 0.643,
+      "box_z_max": 0.797,
+      "box_z_end": 0.25,
+      "xy_displacement": 1.164,
+      "both_hand_contact_fraction": 0.289,
+      "table_z": [
+        0.478211373090744,
+        0.08499995619058609
+      ]
+    },
+    {
+      "clip": "carrybox_motion_3_with_contact",
+      "split": "train",
+      "seconds": 6.68,
+      "box_z_start": 0.529,
+      "box_z_max": 0.74,
+      "box_z_end": 0.25,
+      "xy_displacement": 0.977,
+      "both_hand_contact_fraction": 0.26,
+      "table_z": [
+        0.3739120662212372,
+        0.09499987959861755
+      ]
+    },
+    {
+      "clip": "carrybox_motion_4_with_contact",
+      "split": "train",
+      "seconds": 9.9,
+      "box_z_start": 0.323,
+      "box_z_max": 0.853,
+      "box_z_end": 0.328,
+      "xy_displacement": 1.346,
+      "both_hand_contact_fraction": 0.667,
+      "table_z": [
+        0.16332979500293732,
+        0.14829763770103455
+      ]
+    },
+    {
+      "clip": "carrybox_motion_5_with_contact",
+      "split": "train",
+      "seconds": 10.68,
+      "box_z_start": 0.31,
+      "box_z_max": 0.838,
+      "box_z_end": 0.58,
+      "xy_displacement": 2.05,
+      "both_hand_contact_fraction": 0.594,
+      "table_z": [
+        0.14973483979701996,
+        0.39978814125061035
+      ]
+    },
+    {
+      "clip": "carrybox_motion_6_with_contact",
+      "split": "train",
+      "seconds": 12.34,
+      "box_z_start": 0.416,
+      "box_z_max": 0.916,
+      "box_z_end": 0.633,
+      "xy_displacement": 2.145,
+      "both_hand_contact_fraction": 0.684,
+      "table_z": [
+        0.25563928484916687,
+        0.4527321457862854
+      ]
+    },
+    {
+      "clip": "carrybox_motion_7_with_contact",
+      "split": "val",
+      "seconds": 8.32,
+      "box_z_start": 0.572,
+      "box_z_max": 0.894,
+      "box_z_end": 0.163,
+      "xy_displacement": 1.286,
+      "both_hand_contact_fraction": 0.782,
+      "table_z": [
+        0.40184852480888367,
+        -0.01676226407289505
+      ]
+    },
+    {
+      "clip": "carrybox_motion_8_with_contact",
+      "split": "val",
+      "seconds": 6.34,
+      "box_z_start": 0.448,
+      "box_z_max": 0.873,
+      "box_z_end": 0.544,
+      "xy_displacement": 2.128,
+      "both_hand_contact_fraction": 0.836,
+      "table_z": [
+        0.27845218777656555,
+        0.36366164684295654
+      ]
+    },
+    {
+      "clip": "carrybox_motion_9_with_contact",
+      "split": "val",
+      "seconds": 7.56,
+      "box_z_start": 0.782,
+      "box_z_max": 0.879,
+      "box_z_end": 0.309,
+      "xy_displacement": 2.693,
+      "both_hand_contact_fraction": 0.842,
+      "table_z": [
+        0.611530601978302,
+        0.12947914004325867
+      ]
+    }
+  ],
+  "reference_contact_geometry": {
+    "method": "Strided samples (~50 frames per clip) from expected airborne phases; geometric hand capsule proxy, not force.",
+    "per_clip": [
+      {
+        "clip": "carrybox_motion_0_with_contact",
+        "expected_carry_seconds": 0.84,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_10_with_contact",
+        "expected_carry_seconds": 24.86,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_11_with_contact",
+        "expected_carry_seconds": 3.82,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_12_with_contact",
+        "expected_carry_seconds": 39.22,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_1_with_contact",
+        "expected_carry_seconds": 14.66,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_2_with_contact",
+        "expected_carry_seconds": 1.34,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_3_with_contact",
+        "expected_carry_seconds": 1.38,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_4_with_contact",
+        "expected_carry_seconds": 5.38,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_5_with_contact",
+        "expected_carry_seconds": 5.74,
+        "reference_hands_near_fraction": 1.0
+      },
+      {
+        "clip": "carrybox_motion_6_with_contact",
+        "expected_carry_seconds": 7.32,
+        "reference_hands_near_fraction": 0.226
+      }
+    ]
+  },
+  "created_at_utc": "2026-10-23T12:40:39.062881+00:00",
+  "training": {
+    "iteration": 4000,
+    "wall_time": 1425.4485375881195,
+    "sim_steps": 10305536,
+    "args": {
+      "task": "hoi",
+      "init_policy": "logs/lafan1_5090/ckpt_014000.pt",
+      "no_compile": false,
+      "num_envs": 1024,
+      "iterations": 4000,
+      "buffer_steps": 1000,
+      "utd": 0.4,
+      "horizon": 32,
+      "goal_frames": 10,
+      "hist": 10,
+      "wm_window": 8,
+      "wm_batches": 5,
+      "wm_batch": 512,
+      "pi_batch": 512,
+      "lr": 0.0002,
+      "gamma": 0.99,
+      "lam": 0.95,
+      "action_noise": 0.1,
+      "critic_epochs": 2,
+      "critic_minibatches": 4,
+      "no_critic": false,
+      "warmup_steps": 64,
+      "wm_only_iters": 500,
+      "lr_decay_iters": 250000,
+      "ckpt_every": 1000,
+      "log_every": 50,
+      "motion_dir": "data/hoi/omnicontact/carrybox/train",
+      "log_dir": "logs/hoi_carry_5090",
+      "seed": 0,
+      "resume": null,
+      "amp": "bf16",
+      "livestream": 0,
+      "xr": false,
+      "device": "cuda:0",
+      "visualizer": null,
+      "verbose": false,
+      "info": false,
+      "experience": "",
+      "deterministic": false,
+      "kit_args": "",
+      "anim_recording_enabled": false,
+      "anim_recording_start_time": 0,
+      "anim_recording_stop_time": 10,
+      "kit_visualizer": false,
+      "enable_cameras": false
+    },
+    "saved_at": "2026-10-23 20:37:44",
+    "wall_time_scope": "Training loop including compilation, excluding simulator startup and initial replay warm-up; concurrent intermediate evaluations can affect throughput.",
+    "final_metrics": {
+      "iteration": 4000.0,
+      "wall_h": 0.395956,
+      "sim_steps": 10305536.0,
+      "wm_loss": 0.384297,
+      "wm_err8": 0.689645,
+      "pi_loss": -13.6991,
+      "v_loss": 0.154477,
+      "imag_rew": 0.736469,
+      "pi_gradnorm": 4.42953,
+      "imag_survival": 0.954917,
+      "sim_rew": 0.697826,
+      "ep_len": 193.991,
+      "ep_ret_norm": 0.514051,
+      "term_frac": 0.554381,
+      "it_per_s": 2.75475,
+      "lr": 0.000199878
+    }
+  },
+  "evaluations": {
+    "train": {
+      "aggregate": {
+        "clips": 10,
+        "completed_without_termination": 2,
+        "task_success": 1,
+        "strict_tracked_lift_and_transport": 2,
+        "norm_return": 0.34471556544303894
+      },
+      "tracking": {
+        "norm_return": 0.34471556544303894,
+        "norm_return_framew": 0.37228450179100037,
+        "n_failed": 8,
+        "failed": [
+          "carrybox_motion_10_with_contact",
+          "carrybox_motion_11_with_contact",
+          "carrybox_motion_12_with_contact",
+          "carrybox_motion_1_with_contact",
+          "carrybox_motion_2_with_contact",
+          "carrybox_motion_3_with_contact",
+          "carrybox_motion_4_with_contact",
+          "carrybox_motion_6_with_contact"
+        ],
+        "per_clip": {
+          "carrybox_motion_0_with_contact": 0.7159,
+          "carrybox_motion_10_with_contact": 0.5571,
+          "carrybox_motion_11_with_contact": 0.2375,
+          "carrybox_motion_12_with_contact": 0.4085,
+          "carrybox_motion_1_with_contact": 0.0771,
+          "carrybox_motion_2_with_contact": 0.0591,
+          "carrybox_motion_3_with_contact": 0.3612,
+          "carrybox_motion_4_with_contact": 0.0536,
+          "carrybox_motion_5_with_contact": 0.7691,
+          "carrybox_motion_6_with_contact": 0.208
+        },
+        "object_position_rmse_m_alive": 0.19429440796375275,
+        "per_clip_object_rmse_m_alive": {
+          "carrybox_motion_0_with_contact": 0.2703,
+          "carrybox_motion_10_with_contact": 0.2096,
+          "carrybox_motion_11_with_contact": 0.2092,
+          "carrybox_motion_12_with_contact": 0.2312,
+          "carrybox_motion_1_with_contact": 0.2976,
+          "carrybox_motion_2_with_contact": 0.0123,
+          "carrybox_motion_3_with_contact": 0.161,
+          "carrybox_motion_4_with_contact": 0.1789,
+          "carrybox_motion_5_with_contact": 0.1534,
+          "carrybox_motion_6_with_contact": 0.2194
+        },
+        "per_clip_completion": {
+          "carrybox_motion_0_with_contact": 1.0,
+          "carrybox_motion_10_with_contact": 0.7718,
+          "carrybox_motion_11_with_contact": 0.4737,
+          "carrybox_motion_12_with_contact": 0.5587,
+          "carrybox_motion_1_with_contact": 0.1179,
+          "carrybox_motion_2_with_contact": 0.1553,
+          "carrybox_motion_3_with_contact": 0.6257,
+          "carrybox_motion_4_with_contact": 0.101,
+          "carrybox_motion_5_with_contact": 1.0,
+          "carrybox_motion_6_with_contact": 0.3533
+        },
+        "per_clip_object_endpoint_error_m": {
+          "carrybox_motion_0_with_contact": 0.5092,
+          "carrybox_motion_10_with_contact": 1.4118,
+          "carrybox_motion_11_with_contact": 3.7167,
+          "carrybox_motion_12_with_contact": 0.9305,
+          "carrybox_motion_1_with_contact": 3.3496,
+          "carrybox_motion_2_with_contact": 1.2261,
+          "carrybox_motion_3_with_contact": 1.1019,
+          "carrybox_motion_4_with_contact": 0.9581,
+          "carrybox_motion_5_with_contact": 0.1187,
+          "carrybox_motion_6_with_contact": 2.5035
+        },
+        "per_clip_object_displacement_m": {
+          "carrybox_motion_0_with_contact": 0.123,
+          "carrybox_motion_10_with_contact": 0.7125,
+          "carrybox_motion_11_with_contact": 0.0545,
+          "carrybox_motion_12_with_contact": 0.9222,
+          "carrybox_motion_1_with_contact": 0.0469,
+          "carrybox_motion_2_with_contact": 0.0053,
+          "carrybox_motion_3_with_contact": 0.1003,
+          "carrybox_motion_4_with_contact": 0.4124,
+          "carrybox_motion_5_with_contact": 2.0089,
+          "carrybox_motion_6_with_contact": 0.4635
+        },
+        "n_task_success": 1,
+        "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+        "failure_details": {
+          "carrybox_motion_4_with_contact": {
+            "step": 50,
+            "root_height_error_m": 0.09129083156585693,
+            "tilt_cosine_error": 0.8364378213882446,
+            "object_position_error_m": 0.412421852350235,
+            "triggers": [
+              "robot_tilt"
+            ]
+          },
+          "carrybox_motion_2_with_contact": {
+            "step": 59,
+            "root_height_error_m": 0.2730768918991089,
+            "tilt_cosine_error": 0.05612748861312866,
+            "object_position_error_m": 0.012567320838570595,
+            "triggers": [
+              "robot_height"
+            ]
+          },
+          "carrybox_motion_1_with_contact": {
+            "step": 106,
+            "root_height_error_m": 0.04467552900314331,
+            "tilt_cosine_error": 0.12739348411560059,
+            "object_position_error_m": 0.751160740852356,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_11_with_contact": {
+            "step": 189,
+            "root_height_error_m": 0.0036394596099853516,
+            "tilt_cosine_error": 0.003975868225097656,
+            "object_position_error_m": 0.7690678238868713,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_3_with_contact": {
+            "step": 209,
+            "root_height_error_m": 0.03171259164810181,
+            "tilt_cosine_error": 9.500980377197266e-05,
+            "object_position_error_m": 0.7538943886756897,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_6_with_contact": {
+            "step": 218,
+            "root_height_error_m": 0.02130436897277832,
+            "tilt_cosine_error": 0.28612470626831055,
+            "object_position_error_m": 0.7567612528800964,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_10_with_contact": {
+            "step": 1157,
+            "root_height_error_m": 0.2524421215057373,
+            "tilt_cosine_error": 0.10690253973007202,
+            "object_position_error_m": 0.6254962086677551,
+            "triggers": [
+              "robot_height"
+            ]
+          },
+          "carrybox_motion_12_with_contact": {
+            "step": 1819,
+            "root_height_error_m": 0.14872562885284424,
+            "tilt_cosine_error": 0.10463392734527588,
+            "object_position_error_m": 0.7973289489746094,
+            "triggers": [
+              "object_position"
+            ]
+          }
+        }
+      },
+      "carry": {
+        "thresholds": {
+          "support_clearance_m": 0.03,
+          "object_tracking_error_m": 0.15,
+          "hand_capsule_surface_distance_m": 0.06,
+          "minimum_continuous_carry_seconds": 0.3,
+          "minimum_segment_xy_displacement_m": 0.1,
+          "minimum_lift_above_initial_center_m": 0.03
+        },
+        "note": "Geometric hand proximity is not measured contact force; carry evidence alone is not full task success.",
+        "per_clip": {
+          "carrybox_motion_0_with_contact": {
+            "reference_expected_carry_seconds": 0.84,
+            "tracked_airborne_with_both_hands_seconds": 0.54,
+            "required_carry_fraction_matched": 0.6429,
+            "longest_tracked_airborne_segment_seconds": 0.54,
+            "tracked_airborne_xy_path_m": 0.0724,
+            "longest_lifted_segment_seconds": 0.54,
+            "max_lifted_segment_xy_displacement_m": 0.0648,
+            "reference_peak_height_above_start_m": 0.1211,
+            "actual_peak_height_above_start_m": 0.1463,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_10_with_contact": {
+            "reference_expected_carry_seconds": 24.86,
+            "tracked_airborne_with_both_hands_seconds": 1.18,
+            "required_carry_fraction_matched": 0.0475,
+            "longest_tracked_airborne_segment_seconds": 0.36,
+            "tracked_airborne_xy_path_m": 0.4964,
+            "longest_lifted_segment_seconds": 0.36,
+            "max_lifted_segment_xy_displacement_m": 0.1755,
+            "reference_peak_height_above_start_m": 0.6198,
+            "actual_peak_height_above_start_m": 0.7108,
+            "observed_lift_and_transport": true
+          },
+          "carrybox_motion_11_with_contact": {
+            "reference_expected_carry_seconds": 3.82,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.1914,
+            "actual_peak_height_above_start_m": 0.0239,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_12_with_contact": {
+            "reference_expected_carry_seconds": 39.22,
+            "tracked_airborne_with_both_hands_seconds": 3.86,
+            "required_carry_fraction_matched": 0.0984,
+            "longest_tracked_airborne_segment_seconds": 2.28,
+            "tracked_airborne_xy_path_m": 1.675,
+            "longest_lifted_segment_seconds": 2.28,
+            "max_lifted_segment_xy_displacement_m": 0.6758,
+            "reference_peak_height_above_start_m": 0.1726,
+            "actual_peak_height_above_start_m": 0.1578,
+            "observed_lift_and_transport": true
+          },
+          "carrybox_motion_1_with_contact": {
+            "reference_expected_carry_seconds": 14.66,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.7357,
+            "actual_peak_height_above_start_m": 0.0247,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_2_with_contact": {
+            "reference_expected_carry_seconds": 1.34,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.1537,
+            "actual_peak_height_above_start_m": 0.0,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_3_with_contact": {
+            "reference_expected_carry_seconds": 1.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.211,
+            "actual_peak_height_above_start_m": 0.0217,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_4_with_contact": {
+            "reference_expected_carry_seconds": 5.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.5295,
+            "actual_peak_height_above_start_m": 0.0111,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_5_with_contact": {
+            "reference_expected_carry_seconds": 5.74,
+            "tracked_airborne_with_both_hands_seconds": 0.58,
+            "required_carry_fraction_matched": 0.101,
+            "longest_tracked_airborne_segment_seconds": 0.34,
+            "tracked_airborne_xy_path_m": 0.0927,
+            "longest_lifted_segment_seconds": 0.34,
+            "max_lifted_segment_xy_displacement_m": 0.054,
+            "reference_peak_height_above_start_m": 0.5284,
+            "actual_peak_height_above_start_m": 0.4454,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_6_with_contact": {
+            "reference_expected_carry_seconds": 7.32,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.5002,
+            "actual_peak_height_above_start_m": 0.0268,
+            "observed_lift_and_transport": false
+          }
+        }
+      }
+    },
+    "val": {
+      "aggregate": {
+        "clips": 3,
+        "completed_without_termination": 0,
+        "task_success": 0,
+        "strict_tracked_lift_and_transport": 1,
+        "norm_return": 0.3290773630142212
+      },
+      "tracking": {
+        "norm_return": 0.3290773630142212,
+        "norm_return_framew": 0.3387506604194641,
+        "n_failed": 3,
+        "failed": [
+          "carrybox_motion_7_with_contact",
+          "carrybox_motion_8_with_contact",
+          "carrybox_motion_9_with_contact"
+        ],
+        "per_clip": {
+          "carrybox_motion_7_with_contact": 0.5771,
+          "carrybox_motion_8_with_contact": 0.3074,
+          "carrybox_motion_9_with_contact": 0.1028
+        },
+        "object_position_rmse_m_alive": 0.3228970170021057,
+        "per_clip_object_rmse_m_alive": {
+          "carrybox_motion_7_with_contact": 0.2842,
+          "carrybox_motion_8_with_contact": 0.2616,
+          "carrybox_motion_9_with_contact": 0.423
+        },
+        "per_clip_completion": {
+          "carrybox_motion_7_with_contact": 0.738,
+          "carrybox_motion_8_with_contact": 0.5237,
+          "carrybox_motion_9_with_contact": 0.2169
+        },
+        "per_clip_object_endpoint_error_m": {
+          "carrybox_motion_7_with_contact": 0.902,
+          "carrybox_motion_8_with_contact": 1.4157,
+          "carrybox_motion_9_with_contact": 1.9033
+        },
+        "per_clip_object_displacement_m": {
+          "carrybox_motion_7_with_contact": 0.5582,
+          "carrybox_motion_8_with_contact": 1.6245,
+          "carrybox_motion_9_with_contact": 0.8382
+        },
+        "n_task_success": 0,
+        "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+        "failure_details": {
+          "carrybox_motion_9_with_contact": {
+            "step": 82,
+            "root_height_error_m": 0.04123330116271973,
+            "tilt_cosine_error": 0.028435111045837402,
+            "object_position_error_m": 0.7716050744056702,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_8_with_contact": {
+            "step": 166,
+            "root_height_error_m": 0.03525376319885254,
+            "tilt_cosine_error": 0.002297699451446533,
+            "object_position_error_m": 0.7699224948883057,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_7_with_contact": {
+            "step": 307,
+            "root_height_error_m": 0.015653550624847412,
+            "tilt_cosine_error": 0.00600355863571167,
+            "object_position_error_m": 0.7626924514770508,
+            "triggers": [
+              "object_position"
+            ]
+          }
+        }
+      },
+      "carry": {
+        "thresholds": {
+          "support_clearance_m": 0.03,
+          "object_tracking_error_m": 0.15,
+          "hand_capsule_surface_distance_m": 0.06,
+          "minimum_continuous_carry_seconds": 0.3,
+          "minimum_segment_xy_displacement_m": 0.1,
+          "minimum_lift_above_initial_center_m": 0.03
+        },
+        "note": "Geometric hand proximity is not measured contact force; carry evidence alone is not full task success.",
+        "per_clip": {
+          "carrybox_motion_7_with_contact": {
+            "reference_expected_carry_seconds": 5.48,
+            "tracked_airborne_with_both_hands_seconds": 1.4,
+            "required_carry_fraction_matched": 0.2555,
+            "longest_tracked_airborne_segment_seconds": 0.94,
+            "tracked_airborne_xy_path_m": 0.4035,
+            "longest_lifted_segment_seconds": 0.94,
+            "max_lifted_segment_xy_displacement_m": 0.3137,
+            "reference_peak_height_above_start_m": 0.322,
+            "actual_peak_height_above_start_m": 0.202,
+            "observed_lift_and_transport": true
+          },
+          "carrybox_motion_8_with_contact": {
+            "reference_expected_carry_seconds": 3.92,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.4245,
+            "actual_peak_height_above_start_m": 0.3358,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_9_with_contact": {
+            "reference_expected_carry_seconds": 5.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.0972,
+            "actual_peak_height_above_start_m": 0.0042,
+            "observed_lift_and_transport": false
+          }
+        }
+      }
+    }
+  },
+  "intermediate_evaluations": {
+    "val_1000": {
+      "tracking": {
+        "norm_return": 0.15354380011558533,
+        "norm_return_framew": 0.15197865664958954,
+        "n_failed": 3,
+        "failed": [
+          "carrybox_motion_7_with_contact",
+          "carrybox_motion_8_with_contact",
+          "carrybox_motion_9_with_contact"
+        ],
+        "per_clip": {
+          "carrybox_motion_7_with_contact": 0.1498,
+          "carrybox_motion_8_with_contact": 0.1797,
+          "carrybox_motion_9_with_contact": 0.1312
+        },
+        "object_position_rmse_m_alive": 0.2760452628135681,
+        "per_clip_object_rmse_m_alive": {
+          "carrybox_motion_7_with_contact": 0.2275,
+          "carrybox_motion_8_with_contact": 0.2691,
+          "carrybox_motion_9_with_contact": 0.3315
+        },
+        "per_clip_completion": {
+          "carrybox_motion_7_with_contact": 0.2139,
+          "carrybox_motion_8_with_contact": 0.4164,
+          "carrybox_motion_9_with_contact": 0.3519
+        },
+        "per_clip_object_endpoint_error_m": {
+          "carrybox_motion_7_with_contact": 0.8607,
+          "carrybox_motion_8_with_contact": 2.1064,
+          "carrybox_motion_9_with_contact": 2.6584
+        },
+        "per_clip_object_displacement_m": {
+          "carrybox_motion_7_with_contact": 0.5347,
+          "carrybox_motion_8_with_contact": 0.043,
+          "carrybox_motion_9_with_contact": 0.1161
+        },
+        "n_task_success": 0,
+        "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+        "failure_details": {
+          "carrybox_motion_7_with_contact": {
+            "step": 89,
+            "root_height_error_m": 0.02492380142211914,
+            "tilt_cosine_error": 0.025122761726379395,
+            "object_position_error_m": 0.7614395618438721,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_8_with_contact": {
+            "step": 132,
+            "root_height_error_m": 0.08699220418930054,
+            "tilt_cosine_error": 0.00647813081741333,
+            "object_position_error_m": 0.7507726550102234,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_9_with_contact": {
+            "step": 133,
+            "root_height_error_m": 0.008744120597839355,
+            "tilt_cosine_error": 0.06029331684112549,
+            "object_position_error_m": 0.7502796649932861,
+            "triggers": [
+              "object_position"
+            ]
+          }
+        }
+      },
+      "carry": {
+        "thresholds": {
+          "support_clearance_m": 0.03,
+          "object_tracking_error_m": 0.15,
+          "hand_capsule_surface_distance_m": 0.06,
+          "minimum_continuous_carry_seconds": 0.3,
+          "minimum_segment_xy_displacement_m": 0.1,
+          "minimum_lift_above_initial_center_m": 0.03
+        },
+        "note": "Geometric hand proximity is not measured contact force; carry evidence alone is not full task success.",
+        "per_clip": {
+          "carrybox_motion_7_with_contact": {
+            "reference_expected_carry_seconds": 5.48,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.322,
+            "actual_peak_height_above_start_m": 0.0026,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_8_with_contact": {
+            "reference_expected_carry_seconds": 3.92,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.4245,
+            "actual_peak_height_above_start_m": 0.013,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_9_with_contact": {
+            "reference_expected_carry_seconds": 5.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.0972,
+            "actual_peak_height_above_start_m": 0.0,
+            "observed_lift_and_transport": false
+          }
+        }
+      }
+    },
+    "train_2000": {
+      "tracking": {
+        "norm_return": 0.39321351051330566,
+        "norm_return_framew": 0.3816043436527252,
+        "n_failed": 6,
+        "failed": [
+          "carrybox_motion_10_with_contact",
+          "carrybox_motion_12_with_contact",
+          "carrybox_motion_1_with_contact",
+          "carrybox_motion_3_with_contact",
+          "carrybox_motion_4_with_contact",
+          "carrybox_motion_5_with_contact"
+        ],
+        "per_clip": {
+          "carrybox_motion_0_with_contact": 0.7149,
+          "carrybox_motion_10_with_contact": 0.1549,
+          "carrybox_motion_11_with_contact": 0.6115,
+          "carrybox_motion_12_with_contact": 0.5128,
+          "carrybox_motion_1_with_contact": 0.0723,
+          "carrybox_motion_2_with_contact": 0.5314,
+          "carrybox_motion_3_with_contact": 0.2829,
+          "carrybox_motion_4_with_contact": 0.0529,
+          "carrybox_motion_5_with_contact": 0.3658,
+          "carrybox_motion_6_with_contact": 0.6328
+        },
+        "object_position_rmse_m_alive": 0.22826169431209564,
+        "per_clip_object_rmse_m_alive": {
+          "carrybox_motion_0_with_contact": 0.2746,
+          "carrybox_motion_10_with_contact": 0.3539,
+          "carrybox_motion_11_with_contact": 0.1244,
+          "carrybox_motion_12_with_contact": 0.1335,
+          "carrybox_motion_1_with_contact": 0.3051,
+          "carrybox_motion_2_with_contact": 0.2224,
+          "carrybox_motion_3_with_contact": 0.2213,
+          "carrybox_motion_4_with_contact": 0.1312,
+          "carrybox_motion_5_with_contact": 0.3052,
+          "carrybox_motion_6_with_contact": 0.2111
+        },
+        "per_clip_completion": {
+          "carrybox_motion_0_with_contact": 1.0,
+          "carrybox_motion_10_with_contact": 0.2482,
+          "carrybox_motion_11_with_contact": 1.0,
+          "carrybox_motion_12_with_contact": 0.6886,
+          "carrybox_motion_1_with_contact": 0.1179,
+          "carrybox_motion_2_with_contact": 1.0,
+          "carrybox_motion_3_with_contact": 0.6707,
+          "carrybox_motion_4_with_contact": 0.1152,
+          "carrybox_motion_5_with_contact": 0.6049,
+          "carrybox_motion_6_with_contact": 1.0
+        },
+        "per_clip_object_endpoint_error_m": {
+          "carrybox_motion_0_with_contact": 0.4987,
+          "carrybox_motion_10_with_contact": 1.7729,
+          "carrybox_motion_11_with_contact": 0.3184,
+          "carrybox_motion_12_with_contact": 0.8037,
+          "carrybox_motion_1_with_contact": 3.336,
+          "carrybox_motion_2_with_contact": 0.4139,
+          "carrybox_motion_3_with_contact": 0.8815,
+          "carrybox_motion_4_with_contact": 1.0045,
+          "carrybox_motion_5_with_contact": 1.9514,
+          "carrybox_motion_6_with_contact": 0.1485
+        },
+        "per_clip_object_displacement_m": {
+          "carrybox_motion_0_with_contact": 0.1614,
+          "carrybox_motion_10_with_contact": 0.3518,
+          "carrybox_motion_11_with_contact": 4.019,
+          "carrybox_motion_12_with_contact": 0.8004,
+          "carrybox_motion_1_with_contact": 0.0597,
+          "carrybox_motion_2_with_contact": 1.633,
+          "carrybox_motion_3_with_contact": 0.4951,
+          "carrybox_motion_4_with_contact": 0.3653,
+          "carrybox_motion_5_with_contact": 0.1403,
+          "carrybox_motion_6_with_contact": 2.0687
+        },
+        "n_task_success": 0,
+        "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+        "failure_details": {
+          "carrybox_motion_4_with_contact": {
+            "step": 57,
+            "root_height_error_m": 0.06561094522476196,
+            "tilt_cosine_error": 0.8644315004348755,
+            "object_position_error_m": 0.36482375860214233,
+            "triggers": [
+              "robot_tilt"
+            ]
+          },
+          "carrybox_motion_1_with_contact": {
+            "step": 106,
+            "root_height_error_m": 0.00019562244415283203,
+            "tilt_cosine_error": 0.012451589107513428,
+            "object_position_error_m": 0.7546839118003845,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_3_with_contact": {
+            "step": 224,
+            "root_height_error_m": 0.0910380482673645,
+            "tilt_cosine_error": 0.0905982255935669,
+            "object_position_error_m": 0.7632004022598267,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_5_with_contact": {
+            "step": 323,
+            "root_height_error_m": 0.005024552345275879,
+            "tilt_cosine_error": 0.050382018089294434,
+            "object_position_error_m": 0.7522003054618835,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_10_with_contact": {
+            "step": 372,
+            "root_height_error_m": 0.25502192974090576,
+            "tilt_cosine_error": 0.2533113360404968,
+            "object_position_error_m": 0.6278819441795349,
+            "triggers": [
+              "robot_height"
+            ]
+          },
+          "carrybox_motion_12_with_contact": {
+            "step": 2242,
+            "root_height_error_m": 0.008146405220031738,
+            "tilt_cosine_error": 0.08073365688323975,
+            "object_position_error_m": 0.7620878219604492,
+            "triggers": [
+              "object_position"
+            ]
+          }
+        }
+      },
+      "carry": {
+        "thresholds": {
+          "support_clearance_m": 0.03,
+          "object_tracking_error_m": 0.15,
+          "hand_capsule_surface_distance_m": 0.06,
+          "minimum_continuous_carry_seconds": 0.3,
+          "minimum_segment_xy_displacement_m": 0.1,
+          "minimum_lift_above_initial_center_m": 0.03
+        },
+        "note": "Geometric hand proximity is not measured contact force; carry evidence alone is not full task success.",
+        "per_clip": {
+          "carrybox_motion_0_with_contact": {
+            "reference_expected_carry_seconds": 0.84,
+            "tracked_airborne_with_both_hands_seconds": 0.36,
+            "required_carry_fraction_matched": 0.4286,
+            "longest_tracked_airborne_segment_seconds": 0.26,
+            "tracked_airborne_xy_path_m": 0.0257,
+            "longest_lifted_segment_seconds": 0.26,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.1211,
+            "actual_peak_height_above_start_m": 0.0853,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_10_with_contact": {
+            "reference_expected_carry_seconds": 24.86,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.6198,
+            "actual_peak_height_above_start_m": 0.006,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_11_with_contact": {
+            "reference_expected_carry_seconds": 3.82,
+            "tracked_airborne_with_both_hands_seconds": 2.64,
+            "required_carry_fraction_matched": 0.6911,
+            "longest_tracked_airborne_segment_seconds": 2.34,
+            "tracked_airborne_xy_path_m": 2.5619,
+            "longest_lifted_segment_seconds": 2.04,
+            "max_lifted_segment_xy_displacement_m": 1.9545,
+            "reference_peak_height_above_start_m": 0.1914,
+            "actual_peak_height_above_start_m": 0.233,
+            "observed_lift_and_transport": true
+          },
+          "carrybox_motion_12_with_contact": {
+            "reference_expected_carry_seconds": 39.22,
+            "tracked_airborne_with_both_hands_seconds": 14.36,
+            "required_carry_fraction_matched": 0.3661,
+            "longest_tracked_airborne_segment_seconds": 5.16,
+            "tracked_airborne_xy_path_m": 6.9926,
+            "longest_lifted_segment_seconds": 5.06,
+            "max_lifted_segment_xy_displacement_m": 1.2315,
+            "reference_peak_height_above_start_m": 0.1726,
+            "actual_peak_height_above_start_m": 0.1417,
+            "observed_lift_and_transport": true
+          },
+          "carrybox_motion_1_with_contact": {
+            "reference_expected_carry_seconds": 14.66,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.7357,
+            "actual_peak_height_above_start_m": 0.0138,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_2_with_contact": {
+            "reference_expected_carry_seconds": 1.34,
+            "tracked_airborne_with_both_hands_seconds": 0.08,
+            "required_carry_fraction_matched": 0.0597,
+            "longest_tracked_airborne_segment_seconds": 0.08,
+            "tracked_airborne_xy_path_m": 0.0517,
+            "longest_lifted_segment_seconds": 0.08,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.1537,
+            "actual_peak_height_above_start_m": 0.1246,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_3_with_contact": {
+            "reference_expected_carry_seconds": 1.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.211,
+            "actual_peak_height_above_start_m": 0.1006,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_4_with_contact": {
+            "reference_expected_carry_seconds": 5.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.5295,
+            "actual_peak_height_above_start_m": 0.0212,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_5_with_contact": {
+            "reference_expected_carry_seconds": 5.74,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.5284,
+            "actual_peak_height_above_start_m": 0.0208,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_6_with_contact": {
+            "reference_expected_carry_seconds": 7.32,
+            "tracked_airborne_with_both_hands_seconds": 0.1,
+            "required_carry_fraction_matched": 0.0137,
+            "longest_tracked_airborne_segment_seconds": 0.1,
+            "tracked_airborne_xy_path_m": 0.0216,
+            "longest_lifted_segment_seconds": 0.1,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.5002,
+            "actual_peak_height_above_start_m": 0.3126,
+            "observed_lift_and_transport": false
+          }
+        }
+      }
+    },
+    "val_2000": {
+      "tracking": {
+        "norm_return": 0.27068430185317993,
+        "norm_return_framew": 0.27186834812164307,
+        "n_failed": 3,
+        "failed": [
+          "carrybox_motion_7_with_contact",
+          "carrybox_motion_8_with_contact",
+          "carrybox_motion_9_with_contact"
+        ],
+        "per_clip": {
+          "carrybox_motion_7_with_contact": 0.4043,
+          "carrybox_motion_8_with_contact": 0.3323,
+          "carrybox_motion_9_with_contact": 0.0755
+        },
+        "object_position_rmse_m_alive": 0.298650860786438,
+        "per_clip_object_rmse_m_alive": {
+          "carrybox_motion_7_with_contact": 0.3866,
+          "carrybox_motion_8_with_contact": 0.2187,
+          "carrybox_motion_9_with_contact": 0.2907
+        },
+        "per_clip_completion": {
+          "carrybox_motion_7_with_contact": 0.5745,
+          "carrybox_motion_8_with_contact": 0.5521,
+          "carrybox_motion_9_with_contact": 0.1429
+        },
+        "per_clip_object_endpoint_error_m": {
+          "carrybox_motion_7_with_contact": 1.2587,
+          "carrybox_motion_8_with_contact": 1.0403,
+          "carrybox_motion_9_with_contact": 2.2453
+        },
+        "per_clip_object_displacement_m": {
+          "carrybox_motion_7_with_contact": 0.5664,
+          "carrybox_motion_8_with_contact": 1.9548,
+          "carrybox_motion_9_with_contact": 0.7557
+        },
+        "n_task_success": 0,
+        "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+        "failure_details": {
+          "carrybox_motion_9_with_contact": {
+            "step": 54,
+            "root_height_error_m": 0.0311700701713562,
+            "tilt_cosine_error": 0.0864456295967102,
+            "object_position_error_m": 0.758430004119873,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_8_with_contact": {
+            "step": 175,
+            "root_height_error_m": 0.047658324241638184,
+            "tilt_cosine_error": 0.09235548973083496,
+            "object_position_error_m": 0.7567181587219238,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_7_with_contact": {
+            "step": 239,
+            "root_height_error_m": 0.005688309669494629,
+            "tilt_cosine_error": 0.00690770149230957,
+            "object_position_error_m": 0.7502851486206055,
+            "triggers": [
+              "object_position"
+            ]
+          }
+        }
+      },
+      "carry": {
+        "thresholds": {
+          "support_clearance_m": 0.03,
+          "object_tracking_error_m": 0.15,
+          "hand_capsule_surface_distance_m": 0.06,
+          "minimum_continuous_carry_seconds": 0.3,
+          "minimum_segment_xy_displacement_m": 0.1,
+          "minimum_lift_above_initial_center_m": 0.03
+        },
+        "note": "Geometric hand proximity is not measured contact force; carry evidence alone is not full task success.",
+        "per_clip": {
+          "carrybox_motion_7_with_contact": {
+            "reference_expected_carry_seconds": 5.48,
+            "tracked_airborne_with_both_hands_seconds": 0.06,
+            "required_carry_fraction_matched": 0.0109,
+            "longest_tracked_airborne_segment_seconds": 0.06,
+            "tracked_airborne_xy_path_m": 0.0168,
+            "longest_lifted_segment_seconds": 0.06,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.322,
+            "actual_peak_height_above_start_m": 0.1842,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_8_with_contact": {
+            "reference_expected_carry_seconds": 3.92,
+            "tracked_airborne_with_both_hands_seconds": 0.26,
+            "required_carry_fraction_matched": 0.0663,
+            "longest_tracked_airborne_segment_seconds": 0.18,
+            "tracked_airborne_xy_path_m": 0.3167,
+            "longest_lifted_segment_seconds": 0.18,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.4245,
+            "actual_peak_height_above_start_m": 0.3153,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_9_with_contact": {
+            "reference_expected_carry_seconds": 5.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.0972,
+            "actual_peak_height_above_start_m": 0.0,
+            "observed_lift_and_transport": false
+          }
+        }
+      }
+    },
+    "val_3000": {
+      "tracking": {
+        "norm_return": 0.319399893283844,
+        "norm_return_framew": 0.3350836932659149,
+        "n_failed": 3,
+        "failed": [
+          "carrybox_motion_7_with_contact",
+          "carrybox_motion_8_with_contact",
+          "carrybox_motion_9_with_contact"
+        ],
+        "per_clip": {
+          "carrybox_motion_7_with_contact": 0.5945,
+          "carrybox_motion_8_with_contact": 0.2051,
+          "carrybox_motion_9_with_contact": 0.1586
+        },
+        "object_position_rmse_m_alive": 0.31325241923332214,
+        "per_clip_object_rmse_m_alive": {
+          "carrybox_motion_7_with_contact": 0.2832,
+          "carrybox_motion_8_with_contact": 0.2695,
+          "carrybox_motion_9_with_contact": 0.3871
+        },
+        "per_clip_completion": {
+          "carrybox_motion_7_with_contact": 0.7356,
+          "carrybox_motion_8_with_contact": 0.4069,
+          "carrybox_motion_9_with_contact": 0.3148
+        },
+        "per_clip_object_endpoint_error_m": {
+          "carrybox_motion_7_with_contact": 0.8959,
+          "carrybox_motion_8_with_contact": 2.208,
+          "carrybox_motion_9_with_contact": 1.7054
+        },
+        "per_clip_object_displacement_m": {
+          "carrybox_motion_7_with_contact": 0.5355,
+          "carrybox_motion_8_with_contact": 0.1165,
+          "carrybox_motion_9_with_contact": 1.1455
+        },
+        "n_task_success": 0,
+        "task_success_criteria": "complete clip without termination AND object endpoint error <= 0.15 m AND object tracking RMSE <= 0.20 m",
+        "failure_details": {
+          "carrybox_motion_9_with_contact": {
+            "step": 119,
+            "root_height_error_m": 7.027387619018555e-05,
+            "tilt_cosine_error": 0.0002929568290710449,
+            "object_position_error_m": 0.7592916488647461,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_8_with_contact": {
+            "step": 129,
+            "root_height_error_m": 0.07542717456817627,
+            "tilt_cosine_error": 0.08231639862060547,
+            "object_position_error_m": 0.7533166408538818,
+            "triggers": [
+              "object_position"
+            ]
+          },
+          "carrybox_motion_7_with_contact": {
+            "step": 306,
+            "root_height_error_m": 0.03578752279281616,
+            "tilt_cosine_error": 0.005174100399017334,
+            "object_position_error_m": 0.7519239187240601,
+            "triggers": [
+              "object_position"
+            ]
+          }
+        }
+      },
+      "carry": {
+        "thresholds": {
+          "support_clearance_m": 0.03,
+          "object_tracking_error_m": 0.15,
+          "hand_capsule_surface_distance_m": 0.06,
+          "minimum_continuous_carry_seconds": 0.3,
+          "minimum_segment_xy_displacement_m": 0.1,
+          "minimum_lift_above_initial_center_m": 0.03
+        },
+        "note": "Geometric hand proximity is not measured contact force; carry evidence alone is not full task success.",
+        "per_clip": {
+          "carrybox_motion_7_with_contact": {
+            "reference_expected_carry_seconds": 5.48,
+            "tracked_airborne_with_both_hands_seconds": 1.38,
+            "required_carry_fraction_matched": 0.2518,
+            "longest_tracked_airborne_segment_seconds": 0.8,
+            "tracked_airborne_xy_path_m": 0.3294,
+            "longest_lifted_segment_seconds": 0.8,
+            "max_lifted_segment_xy_displacement_m": 0.1823,
+            "reference_peak_height_above_start_m": 0.322,
+            "actual_peak_height_above_start_m": 0.1956,
+            "observed_lift_and_transport": true
+          },
+          "carrybox_motion_8_with_contact": {
+            "reference_expected_carry_seconds": 3.92,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.4245,
+            "actual_peak_height_above_start_m": 0.0044,
+            "observed_lift_and_transport": false
+          },
+          "carrybox_motion_9_with_contact": {
+            "reference_expected_carry_seconds": 5.38,
+            "tracked_airborne_with_both_hands_seconds": 0.0,
+            "required_carry_fraction_matched": 0.0,
+            "longest_tracked_airborne_segment_seconds": 0.0,
+            "tracked_airborne_xy_path_m": 0.0,
+            "longest_lifted_segment_seconds": 0.0,
+            "max_lifted_segment_xy_displacement_m": 0.0,
+            "reference_peak_height_above_start_m": 0.0972,
+            "actual_peak_height_above_start_m": 0.0,
+            "observed_lift_and_transport": false
+          }
+        }
+      }
+    }
+  },
+  "solver_limit_warnings": {
+    "logs/hoi_carry_5090/stdout.log": 15703,
+    "logs/hoi_carry_5090/eval_train/it2000.log": 2,
+    "logs/hoi_carry_5090/eval_train/it4000.log": 0,
+    "logs/hoi_carry_5090/eval_val/it1000.log": 0,
+    "logs/hoi_carry_5090/eval_val/it2000.log": 0,
+    "logs/hoi_carry_5090/eval_val/it3000.log": 0,
+    "logs/hoi_carry_5090/eval_val/it4000.log": 0
+  },
+  "checks": {
+    "logged_training_values_finite": true,
+    "final_actor_and_world_model_values_finite": true,
+    "final_recorded_trajectories_finite": true,
+    "analytic_carry_metric_checks": [
+      "support surface height",
+      "continuous displacement",
+      "interrupted short segments",
+      "stationary jitter"
+    ],
+    "training_configuration_changed_during_run": false,
+    "resume_checkpoint": {
+      "iteration": 4000,
+      "finite_tensor_elements_checked": 57573805,
+      "full_resume_checkpoint_finite": true
+    }
+  },
+  "reset_diagnostic": {
+    "method": "160 environments, middle frame of each training clip repeated 8 times per condition; reference joint PD targets for 0.4 s, not a learned policy. Only robot reset noise differs.",
+    "exact_robot_reset": {
+      "mean_hand_surface_distance_initial_m": 0.0658875,
+      "mean_object_error_after_0_4s_m": 0.3515025,
+      "failed": 0
+    },
+    "noisy_robot_reset": {
+      "mean_hand_surface_distance_initial_m": 0.0828219,
+      "mean_object_error_after_0_4s_m": 0.4044747,
+      "failed": 7
+    },
+    "interpretation": "Reset noise worsened this diagnostic but this does not isolate a cause of training failures; no reset settings were changed."
+  },
+  "limitations": [
+    "Bounded 4000-iteration feasibility trial on ten training motions and three validation motions, one seed; no independent test set.",
+    "Validation motions were inspected at multiple checkpoints; this is a validation comparison, not a blind generalization benchmark.",
+    "The simulator uses approximate palm capsules rather than the original OmniContact hand collision boxes. Source clip 6 has lower compatibility with the geometric hand proxy.",
+    "Partial lift-and-transport evidence is not full pickup/transport/placement success; geometric hand proximity is not contact force.",
+    "The carry flag also requires continuous tracking within 0.15 m and proximity of both hand capsules; a false flag does not mean the box was never carried. Clip 5 at iteration 4000 passes the full tracking task metric and visibly transports the box but fails this stricter segment proxy.",
+    "Inherited robot-only reset perturbations and 100-iteration Newton/MuJoCo-Warp solver settings were retained; solver-limit warnings occurred and were not suppressed.",
+    "Raw source/converted data, trained weights and videos remain local; only code, commands and this report are published."
+  ],
+  "artifacts": {
+    "checkpoint": "logs/hoi_carry_5090/ckpt_004000.pt",
+    "resume_checkpoint": "logs/hoi_carry_5090/last.pt",
+    "trajectories": [
+      "logs/hoi_carry_5090/train_004000.npz",
+      "logs/hoi_carry_5090/val_004000.npz"
+    ],
+    "videos": [
+      "results/hoi_carry_2000_train_clip11.mp4",
+      "results/hoi_carry_3000_val_clip7.mp4",
+      "results/hoi_carry_4000_train_clip5.mp4",
+      "results/hoi_carry_4000_val_clip7.mp4"
+    ]
+  }
+}

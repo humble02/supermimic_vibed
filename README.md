@@ -240,16 +240,53 @@ pick up the free box, transport it, and place it according to the reference.
 ./run_local.sh tools/analyze_carry.py logs/hoi_carry_5090/val_004000.npz \
   --out logs/hoi_carry_5090/eval_val/carry_metrics_004000.json
 ./run_local.sh tools/play.py --checkpoint logs/hoi_carry_5090/ckpt_004000.pt \
-  --motion_dir data/hoi/omnicontact/carrybox/val --clip carrybox_motion_8_with_contact
+  --motion_dir data/hoi/omnicontact/carrybox/train --clip carrybox_motion_5_with_contact
 ```
 
 The carry analyzer uses the **entire reference motion**, including the portion after an
 early termination. It checks box clearance above the floor/support surfaces, position
-tracking, and geometric proximity of both hand capsules during expected carrying phases.
+tracking within 15 cm, and geometric proximity within 6 cm of both hand capsules during
+expected carrying phases.
 Its partial lift-and-transport flag additionally requires a rise of more than 3 cm above
 the initial box center and at least 10 cm horizontal displacement within a continuous
 segment lasting at least 0.3 s. This excludes sliding off a table and stationary jitter.
 Hand proximity is not measured contact force, and partial carrying is not full task success.
+This is a conservative diagnostic: a negative flag does not rule out carrying with a
+larger tracking error or a hand position that this capsule proxy does not capture.
+
+**RTX 5090 carry result (4,000 iterations, seed 0):** 23.8 minutes in the training loop,
+10,305,536 simulator transitions; startup and initial replay warm-up are additional.
+The simulation/training configuration was kept unchanged throughout the run.
+
+| Evaluation | Normalized return | Complete clips without termination | Task success |
+|---|---:|---:|---:|
+| 10 training motions | 0.3447 | 2/10 | 1/10 |
+| 3 validation motions | 0.3291 | 0/3 | 0/3 |
+
+Training clip `carrybox_motion_5_with_contact` passes the existing task criterion: the box
+rises 0.445 m, its net displacement is 2.009 m, tracking RMSE is 0.153 m, and endpoint
+error is 0.119 m. Its video shows pickup, transport and placement. The stricter continuous
+carry-segment proxy above does not flag this clip, illustrating why both diagnostics and
+video inspection are retained.
+
+Validation clip 7 shows a 0.94 s continuous tracked carry segment with 0.314 m horizontal
+displacement, but all three validation clips eventually terminate because the box diverges
+from its reference. Performance also varies between checkpoints: training clip 11 carries
+the box at iteration 2,000 but fails before pickup at 4,000. This is an initial carry trial,
+**not a stable or generalizable carry controller**. Training emitted solver-iteration-limit
+warnings; approximate palm collisions and inherited robot-only reset perturbations remain
+limitations. Final weights, optimizer states, logged metrics and recorded trajectories are finite.
+
+Full results and provenance: [`results/hoi_carry_5090_experiment.json`](results/hoi_carry_5090_experiment.json).
+Local videos: `results/hoi_carry_4000_train_clip5.mp4` and `results/hoi_carry_4000_val_clip7.mp4`.
+To reproduce the training video, evaluate `carrybox/train` with a separate `eval_train`
+output directory and record `logs/hoi_carry_5090/train_004000.npz`, then run:
+
+```bash
+./run_local.sh tools/render.py logs/hoi_carry_5090/train_004000.npz \
+  results/hoi_carry_4000_train_clip5.mp4 --clips carrybox_motion_5_with_contact \
+  --seconds 10.7 --global_ghost --azimuth -45 --elevation -20
+```
 
 ### 2. Data: LAFAN1 motions and the G1 model
 
